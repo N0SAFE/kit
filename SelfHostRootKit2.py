@@ -114,12 +114,12 @@ while run == True:
         os.system(getFileName())
     sortir = True
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("127.0.0.1", 22223))
+    s.connect(("172.17.1.214", 22223))
     ip = s.getsockname()[0]
     port = 22223
     s.close()
     
-    ipScreen = "127.0.0.1"
+    ipScreen = "172.17.1.214"
     port = 22228
     
     
