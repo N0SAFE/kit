@@ -6,6 +6,7 @@ from vidstream import ScreenShareClient
 from vidstream import CameraClient
 url = "https://github.com/N0SAFE/kit/archive/refs/heads/main.zip"
 
+#fichier modifier
 def receive():
         data = client.recv(1024)
         return data.decode()
