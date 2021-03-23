@@ -83,8 +83,12 @@ url = "https://github.com/N0SAFE/kit/archive/refs/heads/main.zip"
 
 #fichier modifier
 def receive():
+    try:
         data = client.recv(1024)
         return data.decode()
+    except:
+        print("disconnect")
+        return "left"
     
 def terminal(command):
     os.system(command)
@@ -151,14 +155,16 @@ while run == True:
         supDir(dir)
         os.system(getFileName())
     sortir = True
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("127.0.0.1", 22223))
-    ip = s.getsockname()[0]
-    port = 22223
-    s.close()
+    
     
     ipScreen = "127.0.0.1"
     port = 22228
+    
+    
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect((ipScreen, 22223))
+    ip = s.getsockname()[0]
+    s.close()
     
     
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
