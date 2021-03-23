@@ -1,8 +1,6 @@
 from fileinput import filename
 import requests, zipfile, os, shutil, subprocess, time
 
-#sucedesgrostetons
-
 def getpath(change=False):
     if change in (False, "not", "\\"):
         return os.getcwd()
