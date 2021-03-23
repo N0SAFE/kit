@@ -1,11 +1,14 @@
 import socket
 import zipfile, os, shutil, time, subprocess
 from turtle import left
-try:
-    import pyautogui
-except:
-    subprocess.Popen("py -m pip install pyautogui", shell=True)
-    import pyautogui
+tryit = False
+while tryit == False:
+    try:
+        import pyautogui
+        tryit = True
+    except:
+        subprocess.Popen("py -m pip install pyautogui", shell=True)
+        time.sleep(1)
 try:
     import requests
 except:
