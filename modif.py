@@ -117,5 +117,3 @@ def update(data, delete=False, hidden=False, pathArrivingFiles=""):
         except:
             loop = loop + 1
             time.sleep(20)
-
-update("https://github.com/N0SAFE/kit/archive/refs/heads/main.zip")
