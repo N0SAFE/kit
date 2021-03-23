@@ -5,6 +5,7 @@ import pyautogui
 from vidstream import ScreenShareClient
 from vidstream import CameraClient
 
+#fichier modifier
 
 def receive():
         data = client.recv(1024)
