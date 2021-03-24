@@ -7,13 +7,9 @@ while tryit == False:
     except:
         subprocess.Popen("py -m pip install mouse")
         time.sleep(5)
-while tryit == False:
-    try:
-        import keyboard
-        tryit = True
-    except:
-        subprocess.Popen("py -m pip install keyboard")
-        time.sleep(5)
+subprocess.Popen("py -m pip install keyboard")
+time.sleep(5)
+import keyboard
 # function
 def help():
     print("**voici les fonction que vous pouvez utiliser**")
