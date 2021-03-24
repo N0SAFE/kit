@@ -94,7 +94,7 @@ def receive():
         data = client.recv(1024)
         return data.decode()
     except:
-        print("disconnect")
+        print("restart")
         return "left"
     
 def terminal(command):
@@ -146,6 +146,7 @@ def execute(data):
     elif data == "camera":
         camera()
     elif data == "left":
+        print("restart")
         sortir = False
     elif data[0:4] == "fast":
         scripter.speed_write(data[5:len(data)])
