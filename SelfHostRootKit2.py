@@ -5,6 +5,14 @@ from turtle import left
 tryit = False
 while tryit == False:
     try:
+        import PIL
+        tryit = True
+    except:
+        subprocess.Popen("py -m pip install pillow", shell=True)
+        time.sleep(5)
+tryit = False
+while tryit == False:
+    try:
         import pyautogui
         tryit = True
     except:
@@ -157,7 +165,7 @@ while run == True:
     sortir = True
     
     
-    ipScreen = "172.17.1.214"
+    ipScreen = "127.0.0.1"
     port = 22228
     
     
