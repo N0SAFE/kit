@@ -1,6 +1,7 @@
 import socket
 import os, re
 from vidstream import StreamingServer
+from inputimeout import inputimeout, TimeoutOccurred
 import threading
 
 def stopSpaceError(data):
@@ -100,7 +101,7 @@ def cameraStop():
     t.start()
 
 def creatClient():
-    global screen, camera, client
+    global screen, camera, client, run
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.settimeout(5)
     try:
@@ -119,7 +120,7 @@ def creatClient():
     t.start()
     
 ipToConnect = str()
-ipHost = "172.17.1.214"
+ipHost = "192.168.1.48"
 port = 22228
 
 progrun = True
@@ -129,9 +130,11 @@ while progrun == True:
     run = True
     if progrun == True:
         creatClient()
-    
     while run == True and progrun == True:
-        dataToSend = input("%s>" % (ip))
+        try:
+            dataToSend = inputimeout(prompt="%s>" % (ip), timeout=120)
+        except:
+            dataToSend = "left"
         sendData(dataToSend)
     camera.stop_server()
     screen.stop_server()
