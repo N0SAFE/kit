@@ -63,7 +63,6 @@ def speed_write(data):
     while i <= (len(data)-1):
         if data[i] != "{":
             write.append(data[i])
-            print(data[i])
         else:
             keyboard.write("".join(write))
             temp = len(write)
