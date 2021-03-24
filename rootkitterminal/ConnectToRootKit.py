@@ -41,8 +41,6 @@ def sendData(data):
             client.send("die".encode())
             run = False
         elif data in ("left", "quit"):
-            camera.stop_server()
-            screen.stop_server()
             client.send("left".encode())
             run = False
         elif data in ("screenStart", "screenstart", "screenRun", "sreenrun", "Startscreen", "startscreen", "Runscreen", "runscreen"):
