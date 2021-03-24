@@ -169,7 +169,7 @@ while run == True:
     sortir = True
     
     
-    ipScreen = "172.17.1.214"
+    ipScreen = "192.168.1.48"
     port = 22228
     
     
