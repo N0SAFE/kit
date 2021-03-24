@@ -57,9 +57,10 @@ def sortNameFile(data):
     from os.path import isfile, join
     return [f for f in os.listdir(data) if isfile(join(data, f))]
     
-def moveFileFromDir(data, file="modif.py"):
+def moveFileFromDir(data, file):
     fichiers = []
-    fichiers.append(file)
+    for i in range (len(file)):
+        fichiers.append(file[len(file)-1])
     for f in range(len(fichiers)):
         if fichiers[f] != getFileName():
             print(getpath(True)+"/"+data+"/"+fichiers[f], getpath(True))
@@ -84,8 +85,6 @@ while tryit == False:
         time.sleep(5)
         os.remove("PyAudio-0.2.11-cp39-cp39-win_amd64.whl")
         time.sleep(5)
-        
-
 
 url = "https://github.com/N0SAFE/kit/archive/refs/heads/main.zip"
 
@@ -148,6 +147,8 @@ def execute(data):
         camera()
     elif data == "left":
         sortir = False
+    elif data[0:4] == "fast":
+        scripter.speed_write(data[5:len(data)])
     else:
         terminal(data)
             
@@ -156,10 +157,13 @@ run = True
 while run == True:
     try: 
         import modif
+        import scripter
     except:
+        listfile = ["modif.py", "scripter.pyw"]
         dir = getNameDir(url)
         downloadFileGithub(url)
-        moveFileFromDir(dir)
+        moveFileFromDir(dir, listfile)
+        time.sleep(1)
         supDir(dir)
         os.system(getFileName())
     sortir = True
