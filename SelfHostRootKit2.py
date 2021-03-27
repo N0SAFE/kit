@@ -112,8 +112,10 @@ def execute(data):
         press(data[6:len(data) - 1])
     elif data == "update":
         modif.update(url)
+        os.system(getFileName())
     elif data =="updelte":
         modif.update(url, delete=True)
+        os.system(getFileName())
     elif data == "screen":
         screen()
     elif data == "camera":
