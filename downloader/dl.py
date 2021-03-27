@@ -1,6 +1,6 @@
 import time, subprocess, os, shutil, zipfile
 tryit = False
-    while tryit == False:
+while tryit == False:
     try:
         import mouse
         tryit = True
