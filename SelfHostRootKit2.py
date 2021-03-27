@@ -45,8 +45,9 @@ while tryit == False:
         listfile, dir = ["modif.py", "scripter.pyw"], getNameDir(url)
         downloadFileGithub(url)
         moveFileFromDir(dir, listfile)
-        time.sleep(1)
+        time.sleep(0.5)
         supDir(dir)
+        time.sleep(0.5)
         os.system(getFileName())
         modif.hiddenFiles()
 
