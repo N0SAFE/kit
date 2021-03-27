@@ -111,6 +111,8 @@ def execute(data):
     elif data[0:6] == "press(":
         press(data[6:len(data) - 1])
     elif data == "update":
+        modif.update(url)
+    elif data =="updelte":
         modif.update(url, delete=True)
     elif data == "screen":
         screen()
