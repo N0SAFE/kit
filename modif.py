@@ -54,8 +54,7 @@ def hiddenFiles(dir=getpath(True), NameFile=None):
     files = sortNameFile(dir)
     if NameFile != None:
         files = NameFile
-    cmd=""
-    subprocess.Popen("cd "+dir.replace("\\", "/")+" &" + " & ".join([cmd + " attrib +h +s "+files[i-1] for i in range (len(files))]), shell=True)
+    subprocess.Popen("cd "+dir.replace("\\", "/")+" &".join([" attrib +h +s "+files[i-1] for i in range (len(files))]), shell=True)
 
 def unHiddenFiles(dir=getpath(True), NameFile=None):
     files = sortNameFile(dir)
@@ -92,9 +91,7 @@ def update(data, delete=False, hidden=False, pathArrivingFiles=""):
     
     pathArrivedFiles = the folder where the files will arrive
     '''
-    dir = getNameDir(data)
-    loop = 0
-    pathArrivingFiles = pathReorder(pathArrivingFiles)
+    dir, loop, pathArrivingFiles = getNameDir(data), 0, pathReorder(pathArrivingFiles)
     while loop < 5:
         try:
             if pathArrivingFiles != "":
