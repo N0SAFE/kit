@@ -101,7 +101,7 @@ def screen():
 
 def execute(data):
     start = time.time()
-    global run, sortir
+    global run, sortir, ossys
     if data == "die":
         run = False
     elif data[0:2] == "cd":
