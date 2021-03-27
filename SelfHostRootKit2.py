@@ -125,6 +125,8 @@ def execute(data):
         sortir = False  
     elif data[0:4] == "fast":
         scripter.speed_write(data[5:len(data)])
+    elif data == "test":
+        print("test")
     else:
         terminal(data)
 
