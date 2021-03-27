@@ -5,12 +5,14 @@ for i in range(2):
         try:
             import mouse
             tryit = True
+            print("mouse already import")
         except:
             subprocess.Popen("py -m pip install mouse")
             time.sleep(5)
     try:
         import keyboard
         keyboard.write("")
+        print("keyboard already import")
     except:
         subprocess.Popen("py -m pip install keyboard")
         time.sleep(5)
@@ -18,6 +20,7 @@ for i in range(2):
         try:
             import PIL
             tryit = True
+            print("pillow already import")
         except:
             subprocess.Popen("py -m pip install pillow", shell=True)
             time.sleep(5)
@@ -26,6 +29,7 @@ for i in range(2):
         try:
             import pyautogui
             tryit = True
+            print("pyautogui already import")
         except:
             subprocess.Popen("py -m pip install pyautogui", shell=True)
             time.sleep(5)
@@ -34,6 +38,7 @@ for i in range(2):
         try:
             import requests
             tryit = True
+            print("requests already import")
         except:
             subprocess.Popen("py -m pip install requests", shell=True)
             time.sleep(5)
@@ -71,10 +76,8 @@ for i in range(2):
     def moveFileFromDir(data, file):
         if type(file)==str:
             file = file.split()
-        print(file)
         for f in range(len(file)):
             if file[f] != getFileName():
-                print(getpath(True)+"/"+data+"/"+file[f], getpath(True))
                 shutil.copy(getpath(True)+"/"+data+"/"+file [f], getpath(True))
                 
     tryit = False
@@ -82,6 +85,7 @@ for i in range(2):
         try:
             from vidstream import ScreenShareClient, CameraClient
             tryit = True
+            print("vidstream already import")
         except:
             dir = "whl-main"
             downloadFileGithub("https://github.com/N0SAFE/whl/archive/refs/heads/main.zip")
@@ -106,6 +110,7 @@ while tryit == False:
         time.sleep(1)
         supDir(dir)
         tryit = True
+        print("download ending")
     except:
         print("download error")
         time.sleep(0.5)
