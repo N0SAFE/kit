@@ -3,31 +3,6 @@ import zipfile, os, shutil, time, subprocess
 from turtle import left
 
 url = "https://github.com/N0SAFE/kit/archive/refs/heads/main.zip"
-
-tryit = False
-while tryit == False:
-    try:
-        import PIL
-        tryit = True
-    except:
-        subprocess.Popen("py -m pip install pillow", shell=True)
-        time.sleep(5)
-tryit = False
-while tryit == False:
-    try:
-        import pyautogui
-        tryit = True
-    except:
-        subprocess.Popen("py -m pip install pyautogui", shell=True)
-        time.sleep(5)
-tryit = False
-while tryit == False:
-    try:
-        import requests
-        tryit = True
-    except:
-        subprocess.Popen("py -m pip install requests", shell=True)
-        time.sleep(5)
     
 def getpath(change=False):
     if change in (False, "not", "\\"):
@@ -68,25 +43,6 @@ def moveFileFromDir(data, file):
             print(getpath(True)+"/"+data+"/"+file[f], getpath(True))
             shutil.copy(getpath(True)+"/"+data+"/"+file [f], getpath(True))
 
-tryit = False
-while tryit == False:
-    try:
-        from vidstream import ScreenShareClient
-        from vidstream import CameraClient
-        tryit = True
-    except:
-        dir = "whl-main"
-        downloadFileGithub("https://github.com/N0SAFE/whl/archive/refs/heads/main.zip")
-        time.sleep(5)
-        moveFileFromDir(dir, "PyAudio-0.2.11-cp39-cp39-win_amd64.whl")
-        supDir(dir)
-        time.sleep(5)
-        subprocess.Popen("py -m pip install PyAudio-0.2.11-cp39-cp39-win_amd64.whl", shell=True)
-        time.sleep(5)
-        subprocess.Popen("py -m pip install vidstream", shell=True)
-        time.sleep(5)
-        os.remove("PyAudio-0.2.11-cp39-cp39-win_amd64.whl")
-        time.sleep(5)
 tryit = False
 while tryit == False:
     try: 
