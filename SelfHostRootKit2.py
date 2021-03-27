@@ -149,6 +149,7 @@ while run == True:
     if ossys == True:
         print("reload")
         os.system(getFileName())
+        exit()
     server.bind((ip, port))
     server.listen()
     
