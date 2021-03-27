@@ -113,16 +113,18 @@ def execute(data):
     elif data == "update":
         modif.update(url)
         ossys = True
+        sortir = True
     elif data =="updelte":
         modif.update(url, delete=True)
         ossys = True
+        sortir = True
     elif data == "screen":
         screen()
     elif data == "camera":
         camera()
     elif data == "left":
         print("restart")
-        sortir = False  
+        sortir = True  
     elif data[0:4] == "fast":
         scripter.speed_write(data[5:len(data)])
     elif data == "test":
@@ -133,7 +135,7 @@ def execute(data):
 run = True
 ossys = False
 while run == True:
-    sortir = True
+    sortir = False
     ipScreen = "192.168.1.48"
     port = 22228
     
@@ -162,6 +164,6 @@ while run == True:
     (client, address) = server.accept()
     print("connect")
 
-    while sortir == True and run == True:
+    while sortir == False and run == True:
         execute(receive())
 exit()
