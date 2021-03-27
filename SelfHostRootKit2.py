@@ -144,6 +144,7 @@ while run == True:
     s.close()
     
     if ossys == True:
+        print("reload")
         os.system(getFileName())
     
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
