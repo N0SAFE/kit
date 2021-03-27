@@ -1,18 +1,5 @@
-import time, subprocess, re, subprocess
+import time, subprocess, re, subprocess, mouse, keyboard
 tryit = False
-while tryit == False:
-    try:
-        import mouse
-        tryit = True
-    except:
-        subprocess.Popen("py -m pip install mouse")
-        time.sleep(5)
-try:
-    import keyboard
-    keyboard.write("")
-except:
-    subprocess.Popen("py -m pip install keyboard")
-    time.sleep(5)
 
 # function
 def help():
@@ -33,17 +20,13 @@ def mousekill():
         mouse.move(0, 0, absolute=True)
     
 def addToVariableCmdTaskkill(app, function, loop=1):
-    i=0
-    ret=""
+    i, ret=0, ""
     while i < loop:
-        ret = ret+function+" "+app+"&"
-        i = i + 1
+        ret, i = ret+function+" "+app+"&", i+1
     return ret
 
 def shortcut(app, function, loop=1):
-    i = 0
-    ret = ""
-    app = " ".join(app.split("§+"))
+    ret, app = "", " ".join(app.split("§+"))
     if function == "close":
         subprocess.Popen("taskkill /im "+app+".exe /F"+"& taskkill /im cmd.exe /F", shell=True)
     elif function == "cmd":
@@ -59,25 +42,19 @@ def stopSpaceError(data):
     
 # main
 def speed_write(data):
-    securiter = "n"
-    timer = 0.40
-    seq=[]
-    write=[]
-    i=0
+    securiter, timer, seq, write, i = "n", 0.40, [], [], 0
     while i <= (len(data)-1):
         if data[i] != "{":
             write.append(data[i])
         else:
             keyboard.write("".join(write))
-            temp = len(write)
+            temp, write = len(write), []
             time.sleep(0.20+(temp/80))
-            write=[]
             while data[i] != "}":
                 i = i + 1
                 seq.append(data[i])
             del seq[len(seq)-1]
-            cmd = "".join(seq)
-            cmd = stopSpaceError(cmd)
+            cmd = stopSpaceError("".join(seq))
             x = cmd.split()
             save = x
             loopNumberList = (x[len(x)-1])
