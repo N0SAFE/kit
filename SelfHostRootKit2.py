@@ -145,11 +145,10 @@ while run == True:
     ip = s.getsockname()[0]
     s.close()
     
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     if ossys == True:
         print("reload")
         os.system(getFileName())
-    
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((ip, port))
     server.listen()
     
