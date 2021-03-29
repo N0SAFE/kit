@@ -86,26 +86,37 @@ def help(data):
             print((re.compile(r'[\n\r\t]')).sub(" ", f.readline()))
             x += 1
 
-def testAll(speed=0.3):
-    if speed == True:
-        speed = 0.01
+def testAll(speed=0.3, other=None):
     listIpAvailable, ipHostList = [], ipHost.split(".")
+    if other != None:
+        other = other.split("-")
+        ipHostList.pop(len(ipHostList)-1)
+    else:
+        other=["temp"]
+    if speed == True:
+        speed = 0.08
     ipHostList.pop(len(ipHostList)-1)
     ipHostList = ".".join(ipHostList)
-    for i in range(256):
-        command("co "+ipHostList+"."+str(i))
-        server = creatClient(ipHostList+"."+str(i), speed)
-        if server == True:
-            print("connect to "+ipHostList+"."+str(i))
-            time.sleep(4)
-            listIpAvailable.append(ipHostList+"."+str(i))
-            sendData("left")
-            try:
-                camera.stop_server()
-                screen.stop_server()
-                server = False
-            except:
-                pass
+    for f in range(len(other)):
+        if other[0] != "temp":
+            three = other[f]
+            three = "."+three
+        else:
+            three=""
+        for i in range(256):
+            command("co "+ipHostList+three+"."+str(i))
+            server = creatClient(ipHostList+three+"."+str(i), speed)
+            if server == True:
+                print("connect to "+ipHostList+three+"."+str(i))
+                time.sleep(8)
+                listIpAvailable.append(ipHostList+three+"."+str(i))
+                sendData("left")
+                try:
+                    camera.stop_server()
+                    screen.stop_server()
+                    server = False
+                except:
+                    pass
     if len(listIpAvailable) > 0 :
         print(listIpAvailable)
     else:
@@ -147,12 +158,17 @@ def command(commandToExecute):
         elif commandToExecute in ("clear", "cleared", "cls", "restart"):
             restart()
             command(input(">"))
-        elif commandToExecuteList[0] in ("testAll", "testall", "testallip", "testallIp", "testip", "testIp"):
-            if len(commandToExecuteList) > 1:
-                if commandToExecuteList[1] in ("speed", "spd"):
+        elif commandToExecuteList[0] in ("testall", "testAll"):
+            if len(commandToExecuteList) > 2:
+                if commandToExecuteList[len(commandToExecuteList)-1] in ("speed", "spd"):
+                    testAll(speed=True, other=commandToExecuteList[1])
+                else:
+                    print("syntax error")
+            elif len(commandToExecuteList) > 1:
+                if commandToExecuteList[len(commandToExecuteList)-1] in ("speed", "spd"):
                     testAll(speed=True)
                 else:
-                    testAll()
+                    testAll(other=commandToExecuteList[1])
             else:
                 testAll()
         else:
