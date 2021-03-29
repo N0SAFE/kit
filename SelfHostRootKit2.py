@@ -124,7 +124,7 @@ def execute(data):
 
 run, ossys = True, False
 while run == True:
-    sortir, ipScreen, port = False, "127.0.0.1", 22228
+    sortir, ipScreen, port = False, "192.168.1.48", 22228
     
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect((ipScreen, 22223))
