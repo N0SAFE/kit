@@ -88,7 +88,7 @@ def help(data):
 
 def testAll(speed=0.3):
     if speed == True:
-        speed = 0.005
+        speed = 0.01
     listIpAvailable, ipHostList = [], ipHost.split(".")
     ipHostList.pop(len(ipHostList)-1)
     ipHostList = ".".join(ipHostList)
