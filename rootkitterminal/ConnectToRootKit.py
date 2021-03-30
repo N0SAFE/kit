@@ -69,7 +69,7 @@ def help(data):
         f = open("help.txt", "r")
         while ligne != "___________________________________________________________________ ":
             ligne = (re.compile(r'[\n\r\t]')).sub(" ", f.readline())
-            if ligne != "___________________________________________________________________ " and ligne != " ":
+            if ligne != "___________________________________________________________________ ":
                 print(ligne)
         f.close()
     if data == "sending":
@@ -85,9 +85,32 @@ def help(data):
             ligne = (re.compile(r'[\n\r\t]')).sub(" ", f.readline())
             x += 1
         count = 0
-        while x < NumberOfLine:
-            print((re.compile(r'[\n\r\t]')).sub(" ", f.readline()))
+        ligne = (re.compile(r'[\n\r\t]')).sub(" ", f.readline())
+        while ligne != "___________________________________________________________________ ":
+            ligne = (re.compile(r'[\n\r\t]')).sub(" ", f.readline())
+            if ligne != "___________________________________________________________________ ":
+                print(ligne)
+    if data == "cmd":
+        f = open('help.txt', 'r')
+        NumberOfLine = 0
+        for line in f:
+            NumberOfLine += 1
+        f.close()
+        f = open("help.txt", "r")
+        ligne = None
+        x = 0
+        while ligne != "___________________________________________________________________ ":
+            ligne = (re.compile(r'[\n\r\t]')).sub(" ", f.readline())
             x += 1
+        ligne = (re.compile(r'[\n\r\t]')).sub(" ", f.readline())
+        while ligne != "___________________________________________________________________ ":
+            ligne = (re.compile(r'[\n\r\t]')).sub(" ", f.readline())
+            x += 1
+        ligne = (re.compile(r'[\n\r\t]')).sub(" ", f.readline())
+        while ligne != "___________________________________________________________________":
+            ligne = (re.compile(r'[\n\r\t]')).sub(" ", f.readline())
+            if ligne != "___________________________________________________________________":
+                print(ligne)
 
 def testAll(speed=0.3, other=None):
     listIpAvailable, ipHostList = [], ipHost.split(".")
@@ -238,7 +261,7 @@ def command(commandToExecute):
             clear()
             print("your in the cmd space")
             while run == True:
-                registreCmdAcces(input(">"))
+                registerCmdAcces(input(">"))
             run = temp
             clear()
             restart()
@@ -249,24 +272,27 @@ def command(commandToExecute):
     except:
         command(input(">"))
 
-def registreCmdAcces(data):
+def registerCmdAcces(data):
     global run
     data = stopSpaceError(data)
     dataList = data.split()
     try:
-        if dataList[0] in ("registre", "enregistre"):
+        if dataList[0] in ("register", "enregistre"):
             customcmd = open("cmd.txt", "a")
             temp = "\n"+" ".join(dataList[1:len(dataList)])
             customcmd.write(temp)
             customcmd.close()
-            registreCmdAcces(input(">"))
+            registerCmdAcces(input(">"))
+        elif data in ("help"):
+            help("cmd")
+            registerCmdAcces(input(">"))
         elif data in ("cmdList", "commandlist", "listcmd", "listcommand", "list"):
             try:
                 printFileCmd()
             except:
-                print("no cmd registre")
-                print("to registre a cmd write registre (and enter your cmd here)")
-            registreCmdAcces(input(">"))
+                print("no cmd register")
+                print("to register a cmd write register (and enter your cmd here)")
+            registerCmdAcces(input(">"))
         elif data in ("clear", "cls"):
             clear()
             print("your in the cmd space")
@@ -283,9 +309,9 @@ def registreCmdAcces(data):
                 print("no int write")
         else:
             print("Error")
-            registreCmdAcces(input(">"))
+            registerCmdAcces(input(">"))
     except:
-        registreCmdAcces(input(">"))
+        registerCmdAcces(input(">"))
     
 def sendData(data):
     global run
@@ -308,17 +334,17 @@ def sendData(data):
             clear()
             print("your in the cmd space")
             while run == True:
-                registreCmdAcces(input(">"))
+                registerCmdAcces(input(">"))
             run = temp
             clear()
             restart()
         elif datalist[0] in ("cmd"):
             if len(datalist) > 2 and datalist[2].isdigit() == True:
                 datalist[2] = int(datalist[2])
-                client.send((retLineCmd("cmd.txt", datalist[2])).encode())
+                sendData(retLineCmd("cmd.txt", datalist[2]))
             elif len(datalist) > 1 and datalist[1].isdigit() == True:
                 datalist[1] = int(datalist[1])
-                client.send((retLineCmd("cmd.txt", datalist[1])).encode())
+                sendData(retLineCmd("cmd.txt", datalist[1]))
             else:
                 print("no int write")
         elif data in ("left", "quit", "restart"):
