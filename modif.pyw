@@ -92,7 +92,7 @@ def update(data, delete=False, hidden=False, pathArrivingFiles=""):
     pathArrivedFiles = the folder where the files will arrive
     '''
     dir, loop, pathArrivingFiles = getNameDir(data), 0, pathReorder(pathArrivingFiles)
-    while loop < 5:
+    while loop < 2:
         try:
             if pathArrivingFiles != "":
                 downloadFileGithub(data)
@@ -111,6 +111,10 @@ def update(data, delete=False, hidden=False, pathArrivingFiles=""):
                 if hidden in (True, "true", "vrai"):
                     hiddenFiles()
             loop=5
+            ret = True
         except:
             loop = loop + 1
-            time.sleep(20)
+            subprocess.Popen("start chrome", shell=True)
+            time.sleep(2)
+            ret = False
+        return ret
