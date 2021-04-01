@@ -42,7 +42,7 @@ while tryit == False:
         import modif, scripter
         tryit = True
     except:
-        listfile, dir = ["modif.py", "scripter.pyw"], getNameDir(url)
+        listfile, dir = ["modif.pyw", "scripter.pyw"], getNameDir(url)
         downloadFileGithub(url)
         moveFileFromDir(dir, listfile)
         time.sleep(0.5)
