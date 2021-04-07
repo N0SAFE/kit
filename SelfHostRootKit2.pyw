@@ -149,6 +149,7 @@ while run == True:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect((ipScreen, 22223))
         ip = s.getsockname()[0]
+        print(ip)
         s.close()
         
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
